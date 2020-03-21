@@ -1,0 +1,5 @@
+vue init webpack iot_dmp_frontend
+cnpm install
+cnpm install less less-loader -D
+cnpm install vuex axios -S
+npm run dev
