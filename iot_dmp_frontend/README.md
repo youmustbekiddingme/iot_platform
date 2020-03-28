@@ -1,4 +1,4 @@
-# myproject
+# iot_dmp_frontend
 
 > A Vue.js project
 

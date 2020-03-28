@@ -7,15 +7,20 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/index',
-      name: 'index',
-      component: (resolve) => require(['@/pages/index'], resolve),
+      path: '/login',
+      name: 'login',
+      component: (resolve) => require(['@/pages/index/login'], resolve),
 
     },
     {
       path: '/device',
       name: 'device',
       component: (resolve) => require(['@/pages/device/device'], resolve)
+    },
+    {
+      path: '/dialog',
+      name: 'dialog',
+      component: (resolve) => require(['@/components/dialog'], resolve)
     }
   ]
 })
