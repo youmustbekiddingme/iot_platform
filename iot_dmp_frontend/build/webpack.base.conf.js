@@ -8,12 +8,27 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-
+const createLintingRule = () => ({
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src'), resolve('test')],
+  options: {
+    formatter: require('eslint-friendly-formatter'),
+    emitWarning: !config.dev.showEslintErrorsInOverlay
+  }
+})
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
+  },
+  externals:{         // 使用CDN数据
+    'vue': 'Vue',
+    'vue-router': 'VueRouter',
+    'vuex':'Vuex',
+    'mint-ui': 'MINT'
   },
   output: {
     path: config.build.assetsRoot,
@@ -27,14 +42,23 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'config': resolve('src/apiconfig'),
+      'api': resolve('src/api'),
+      'styles': resolve('src/styles'),
+      'common': resolve('src/components'),
     }
   },
   module: {
     rules: [
+      ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
+      },
+      {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader!less-loader'
       },
       {
         test: /\.js$/,

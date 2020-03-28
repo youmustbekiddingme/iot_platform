@@ -1,30 +1,28 @@
 <template>
   <div id="app">
-    <Index></Index>
-
-    <!--<router-view/>-->
+    <transition :name="transitionName">
+      <!--访问index.html 绑定了App.vue ，根路由 绑定的index.vue ，index1.vue 里面又有子路由story，home，footprints，day。home又是子路由的默认首页显示路由-->
+      <router-view class="Router"></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
-  import Index from './components/index/Index.vue'
 export default {
   name: 'App',
-  components:{
-    'Index':Index
+  data() {
+    return {
+      transitionName: ''
+    }
+  },
+  watch: {
+    $route() {
+
+    }
   }
 }
 </script>
 
-<style>
-#app {
-  width:100%;
-  height:100%;
-  background-color: #ffffff;
-}
-html, body {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-}
+<style lang="less">
+
 </style>

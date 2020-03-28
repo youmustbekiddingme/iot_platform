@@ -1,6 +1,0 @@
-vue init webpack iot_dmp_frontend
-cnpm install
-//cnpm install less less-loader -D             //暂时感觉没影响
-//cnpm install vuex axios -S                   //暂时感觉没影响
-npm install element-ui -S                         //eleme 组件安装
-npm run dev

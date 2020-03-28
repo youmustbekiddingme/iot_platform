@@ -13,7 +13,7 @@
         <el-button type="primary">注册</el-button>
       </div>
     </form>
-   </div>
+  </div>
 </template>
 
 <script>
@@ -28,24 +28,15 @@
     },
     methods:{
       loginClick(){
-
         this.$axios.get("http://localhost:8080/login").then(res=>{
           if(res.data.result==1){
-            console.log(res.data);
-            console.log( this.$router);
-            this.$router.push({path:'/Device'});
 
-          }else if(res.data.result==0){
-             console.log("用户名或密码错误");
+            this.$router.push({path:'/device/'});
 
-          }else if(res.data.result==-1){
-            console.log("服务器异常");
           }
 
         })
-        //1.请求后台接口数据  axios
-        //2.springboot 项目创建 login 接口
-        //3.登陆成功 跳转 设备详情页面，失败提示用户名密码错误
+
       }
     }
   }

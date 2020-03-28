@@ -4,22 +4,30 @@
 
 const path = require('path')
 
-module.exports = {
+let serverObj = {
   dev: {
 
     // Paths
+    env: require('./dev.env'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 9090, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    port: 8088, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
+    // Use Eslint Loader?
+    // If true, your code will be linted during bundling and
+    // linting errors and warnings will be shown in the console.
+    useEslint: false,
+    // If true, eslint errors and warnings will also be shown in the error overlay
+    // in the browser.
+    showEslintErrorsInOverlay: false,
 
     /**
      * Source Maps
@@ -43,7 +51,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
@@ -67,3 +75,26 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
+
+/**
+ * 依据命令执行不同的代理文件
+ * 全局变量在package.json里配置
+ */
+
+if (process.env.NODE_ENV === 'development') {
+  if (process.env.DEV_ENV === 'local') {
+    serverObj.dev.env = require('./dev.env')
+    serverObj.dev.proxyTable = require('./dev.proxy')
+  } else if (process.env.DEV_ENV === 'test') {
+    serverObj.dev.env = require('./dev.test.env')
+    serverObj.dev.proxyTable = require('./dev.test.proxy')
+  } else {
+    serverObj.dev.env = require('./dev.mock.env')
+    serverObj.dev.proxyTable = require('./dev.proxy')
+  }
+}
+
+if (process.env.NODE_ENV === 'production') {
+  serverObj.build.env = (process.env.DEV_ENV === 'test' ? require('./prod.test.env') : require('./prod.env'))
+}
+module.exports = serverObj
