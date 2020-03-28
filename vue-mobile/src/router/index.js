@@ -35,7 +35,7 @@ export default new Router({
       path: '/',
       name: 'index',
       component: (resolve) => require(['@/pages/index'], resolve),
-      redirect: '/home',
+      redirect: '/home',    //先 访问了/ 根路由的@/pages/index ，然后又访问了/home子路由
       children: [
         {
           path: '/home',

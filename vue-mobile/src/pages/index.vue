@@ -41,6 +41,7 @@ export default {
   },
   computed: {
     activeRoute () {
+      console.log(this.$route)
       return this.$route.path
     }
   },
