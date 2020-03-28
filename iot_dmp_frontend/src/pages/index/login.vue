@@ -13,7 +13,9 @@
         <el-button type="primary">注册</el-button>
       </div>
     </form>
-    <dialog_login :msg="isDialogShow"></dialog_login><!-- 父组件isDialogShow传递给msg，子组件通过msg接受-->
+
+
+    <dialog_login :msg.sync="isDialogShow"></dialog_login>   <!--msg 父组件传递给子组件-->
   </div>
 </template>
 
@@ -43,18 +45,17 @@
           var result = res.data.result;
 
             if(result==1){
-              alert('登录成功');
+
               this.$router.push({path:'/device'}); //路由跳转到device页面
 
 
             }else if(result==2){
-              console.log(this.isDialogShow)
               this.isDialogShow=true; //密码输入错误，弹出对话框
 
-              alert('用户名密码错误')
-              //清空输入框
-              this.username='';
+
+              this.username=''; //清空输入框用户名密码
               this.password='';
+
 
             }else {
               alert('服务器异常')
