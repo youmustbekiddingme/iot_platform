@@ -10,7 +10,7 @@
       </div>
       <div class="form-button">
         <el-button type="success" @click="loginClick()">登录</el-button>
-        <el-button type="primary">注册</el-button>
+        <el-button type="primary" @click="registerClick">注册</el-button>
       </div>
     </form>
 
@@ -23,7 +23,7 @@
   import dialog_login from '@/components/dialog'
   export default {
     components:{
-      dialog_login
+      dialog_login   //子组件 是dialog_login
     },
     data() {    //data() 内部的return 的input 是该组件内部的局部变量.  在el-input 标签里进行了双向绑定. 这里要定义input变量的初始值，不然报错
       return {
@@ -34,6 +34,7 @@
     },
 
     methods:{
+      //登录单击事件
       loginClick(){
         var data={
             username: this.username,
@@ -60,11 +61,16 @@
             }else {
               alert('服务器异常')
             }
+        }).catch(err=>{
+          //网络异常，同样调用对话框组件
+          alert("网络异常")
         })
-
-
-
+      },
+      //注册单击事件
+      registerClick(){
+        this.$router.push({path:'/register'})
       }
+
     }
   }
 </script>

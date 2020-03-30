@@ -9,8 +9,13 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: (resolve) => require(['@/pages/index/login'], resolve),
+      component: (resolve) => require(['@/pages/index/login'], resolve)
 
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: (resolve) => require(['@/pages/index/register'], resolve)
     },
     {
       path: '/device',
@@ -22,5 +27,6 @@ export default new Router({
       name: 'dialog',
       component: (resolve) => require(['@/components/dialog'], resolve)
     }
+
   ]
 })

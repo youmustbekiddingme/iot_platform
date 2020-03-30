@@ -29,7 +29,7 @@
 
     methods: {
       hidePanel() {
-        // 子组件将msg传递给父组件更新
+        // 子组件将msg的值false传递给父组件更新
         this.$emit('update:msg', false)
       },
       handleClose(done) {
