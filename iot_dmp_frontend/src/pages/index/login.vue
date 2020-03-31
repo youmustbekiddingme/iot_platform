@@ -14,8 +14,7 @@
       </div>
     </form>
 
-
-    <dialog_login :msg.sync="isDialogShow"></dialog_login>   <!--msg 父组件传递给子组件-->
+    <dialog_login :sonIsDialogShow.sync="isDialogShow"  :dialogPrompt="dialogParam"></dialog_login>   <!--msg 父组件传递给子组件-->
   </div>
 </template>
 
@@ -29,7 +28,8 @@
       return {
         username: '',
         password:'',
-        isDialogShow:false
+        isDialogShow:false,
+        dialogParam:''
       }
     },
 
@@ -46,29 +46,34 @@
           var result = res.data.result;
 
             if(result==1){
-
               this.$router.push({path:'/device'}); //路由跳转到device页面
 
 
             }else if(result==2){
               this.isDialogShow=true; //密码输入错误，弹出对话框
-
-
+              this.setDialogParam("用户名或密码错误");
               this.username=''; //清空输入框用户名密码
               this.password='';
 
 
             }else {
-              alert('服务器异常')
+              //例如返回值为-1 及非约定的业务逻辑值
+              this.isDialogShow=true;
+              this.setDialogParam("服务器异常");
             }
         }).catch(err=>{
           //网络异常，同样调用对话框组件
-          alert("网络异常")
+          this.isDialogShow=true;
+          this.setDialogParam("网络异常");
         })
       },
       //注册单击事件
       registerClick(){
         this.$router.push({path:'/register'})
+      },
+      //设置对话框参数
+      setDialogParam(param){
+        this.dialogParam=param;
       }
 
     }
