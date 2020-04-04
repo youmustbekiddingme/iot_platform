@@ -6,6 +6,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 public class UDPServer {
+    public static void main(String[] args)throws  Exception {
+        UDPServer.run(8080);
+    }
     public static void run(int port) throws Exception{
         EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();

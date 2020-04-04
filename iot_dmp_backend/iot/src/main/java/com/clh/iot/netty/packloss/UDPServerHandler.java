@@ -20,9 +20,10 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
             byte[] array = new byte[length];
             byteBuf.getBytes(byteBuf.readerIndex(), array);  //客户端透传 二进制 ，即计算机补码形式  :如AF =>1010 1111(补码)=>1101 0001(原码)  -81
             // 测试数据：01 01 01 07 01 58 58 17 85 89 70 51 97       51 低位 ，97高位。01 01 01 07 01 58 58 17 85 89 70=> 97 51,工具生成高位在左，低位在右
-            value= ClhUtils.BytesToHexstring(array);
+            System.out.printf("");
+            value= ClhUtils.Bytes2Hexstring(array);
             System.out.println(value);
-            byte bytes[]=DeviceUtil.HexString2Bytes(value);
+            byte bytes[]=ClhUtils.Hexstring2Bytes(value);
 
             ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(bytes), packet.sender()));
 
