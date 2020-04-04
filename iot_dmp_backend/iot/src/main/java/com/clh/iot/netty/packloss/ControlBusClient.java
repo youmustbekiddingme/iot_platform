@@ -44,6 +44,8 @@ public class ControlBusClient {
 
 
     public static void main(String[] args) throws Exception {
+        //获取设备ID，初始化设备时间配置文件创建好key  :A077568.properties
+        //
         new ControlBusClient("127.0.0.1", 8080).start();
     }
 }

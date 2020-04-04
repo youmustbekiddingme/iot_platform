@@ -34,16 +34,19 @@ public class UDPClient {
 
             // 同步等待成功连接
             ChannelFuture cf = bootstrap.connect().sync();
+            Long startTime = System.currentTimeMillis();
+            String message="A077468-01"+"-"+startTime;
+            //测试future 为异步
             Future future=  cf.channel().writeAndFlush(
                         new DatagramPacket(
-                                Unpooled.copiedBuffer("xxxx", CharsetUtil.US_ASCII),
+                                Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
                                 new InetSocketAddress(
                                         "localhost",port
                                 ))).sync();
+            System.out.println( "UDP-Client send:["+   message  +"]");
             //阻塞保持链路，除非主动关闭
             cf.channel().closeFuture().sync();
 
-            System.out.println("xxxxxx");
 
             //异步调用
           //  f.sync();

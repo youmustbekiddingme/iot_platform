@@ -1,9 +1,12 @@
 package com.clh.iot.netty.packloss;
 
+import com.clh.iot.netty.repo.UDPChannelRepo;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.util.Map;
 
 public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
 
@@ -16,23 +19,25 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-        //TCP连接建立 ，发送100个报文
-        Long timeBegin = System.currentTimeMillis();
+        //TCP连接建立
+
 //        for(int i=0;i<1000;i++){
 //            UDPClient.sendMessage(10000);
 //            System.out.println("i="+i);
 //        }
-            //启动UDP链路并发送数据。
+            //启动UDP链路并发送1个报文
             UDPClient.sendMessage(10000);
 
 
-//        Long timeEnd = System.currentTimeMillis();
-//        Long xxx= timeEnd - timeBegin;
-//        System.out.println(xxx);
+            //计算时间、参数
 
-        //ctx.close();
+            //计算完 清空UDP MAP
 
-        //判断逻辑
+
+            //主动关闭TCP连接
+          //ctx.close();
+
+
 
 
 

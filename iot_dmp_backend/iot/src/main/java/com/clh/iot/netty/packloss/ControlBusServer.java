@@ -37,7 +37,7 @@ public class ControlBusServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
 
-                            ByteBuf delimiter = Unpooled.copiedBuffer("&_".getBytes());
+                            ByteBuf delimiter = Unpooled.copiedBuffer("&_".getBytes());//解决拆包粘包
                             ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024,false, delimiter));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new ControlBusServerHandler());
