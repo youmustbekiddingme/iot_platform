@@ -7,7 +7,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 
 public class UDPServer {
     public static void main(String[] args)throws  Exception {
-        UDPServer.run(8080);
+        UDPServer.run(10000);
     }
     public static void run(int port) throws Exception{
         EventLoopGroup group = new NioEventLoopGroup();

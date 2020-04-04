@@ -12,14 +12,18 @@ import io.netty.util.CharsetUtil;
  * Time: 2016/1/21 0021.
  */
 public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket>{
+
+    /**
+     * 接收到UDP SERVER 下发的数据
+     * @param channelHandlerContext
+     * @param datagramPacket
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) throws Exception {
         String response = datagramPacket.content().toString(CharsetUtil.UTF_8);
 
-        if(response.startsWith("结果：")){
-            System.out.println(response);
-            channelHandlerContext.close();
-        }
+        System.out.println( "UDP-Client recevice"+     response);
     }
 
 

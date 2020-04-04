@@ -33,7 +33,8 @@ public class ControlBusClient {
                         } });
             //连接到服务端，connect是异步链接，再调用同步方法sync，等待连接成功
             ChannelFuture f = bootstrap.connect().sync();
-            //阻塞直到客户端通道关闭
+
+            //阻塞直到客户端通道关闭。不主动关闭，一直建立连接
             f.channel().closeFuture().sync();
         } finally {
             //优雅退出，释放NIO线程组

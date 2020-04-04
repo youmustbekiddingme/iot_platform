@@ -5,6 +5,12 @@ public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
     private int counter;
 
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        System.out.println("ControlBusServerHanler accept 1 ControlBusClient Close......");
+    }
+
     /**
      * 服务端从客户端读取数据时触发
      * @param ctx
