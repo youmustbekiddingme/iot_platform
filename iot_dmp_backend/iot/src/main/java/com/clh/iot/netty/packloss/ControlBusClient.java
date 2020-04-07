@@ -1,5 +1,6 @@
 package com.clh.iot.netty.packloss;
 
+import com.clh.iot.config.Const;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,6 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
+import java.util.Scanner;
 
 public class ControlBusClient {
     private String host;
@@ -44,8 +46,22 @@ public class ControlBusClient {
 
 
     public static void main(String[] args) throws Exception {
-        //获取设备ID，初始化设备时间配置文件创建好key  :A077568.properties
-        //
-        new ControlBusClient("127.0.0.1", 8080).start();
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("请输入UDP测试包数量nums：0<nums<=200");
+        try {
+            int nums = sc.nextInt();
+            Const.UDP_PACKAGE_NUMS=nums;
+            if(nums>200||nums<0){
+                System.out.println("请输入一个小于200大于0的值");
+                return;
+            }
+            System.out.println("输入了一个数字"+nums);
+        } catch (Exception e) {
+            System.out.println("请输入一个数字");
+        }
+        new ControlBusClient("localhost", 8080).start();
+
     }
 }

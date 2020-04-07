@@ -32,8 +32,9 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
         String value = response.substring(response.indexOf("-")+1,response.length());
         Map map  =  new HashMap();
         map.put(key,value);
-        ClhUtils.writeToProperties(Const.DEVICE_PATH,map);
-        //主动断开连接
+        ClhUtils clhUtils = new ClhUtils();
+        clhUtils.writeToProperties(Const.DEVICE_PATH,map);
+        //主动断开连
         channelHandlerContext.close();
         System.out.println( "UDP-Client recevice:["+     response+"]");
     }

@@ -1,27 +1,29 @@
 package com.clh.iot.util;
-
 import com.clh.iot.config.Const;
 
 import java.io.*;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 public class ClhUtils {
     public static void main(String[] args) {
-        //String xx= HexstringToDecimalstring("AF");  //   时间戳为16进制字符串 1585817858970
-        //System.out.println(xx);
-        System.out.println(System.currentTimeMillis());
+      String xxx=  PercentNums(0.36);
+        System.out.println(xxx);
     }
 
+        static{
 
+        }
     /**
      * 加载配置文件
      * @param filename
      * @return
      */
-    public static Properties loadProperties(String filename){
+    public  Properties loadProperties(String filename){
         InputStream inputStream ;
         try {
+
             inputStream =  new FileInputStream(filename);
         } catch (FileNotFoundException e) {
             return null;
@@ -45,11 +47,11 @@ public class ClhUtils {
      * 写入properties
      * @param filename
      */
-    public static void writeToProperties(String filename,Map<String,String> map){
-        Properties properties= ClhUtils.loadProperties(Const.DEVICE_PATH);
+    public  void writeToProperties(String filename,Map<String,String> map){
+        Properties properties= loadProperties(filename);
         FileOutputStream fos=null;
         try {
-             fos = new FileOutputStream(Const.DEVICE_PATH,false); //默认是false ，表示获取流文件会重新覆盖之前的，true表示追加。
+             fos = new FileOutputStream(filename,false); //默认是false ，表示获取流文件会重新覆盖之前的，true表示追加。
             //读取原来配置文件的数据加载到内存
             OutputStreamWriter opw = new OutputStreamWriter(fos,"utf-8");
             //新增的数据
@@ -147,5 +149,9 @@ public class ClhUtils {
         return null;
     }
 
-
+    public static String PercentNums(double nums){
+        java.text.NumberFormat nf=java.text.NumberFormat.getPercentInstance();
+        nf.setMinimumFractionDigits(2);
+       return  nf.format(nums);
+    }
 }

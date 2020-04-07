@@ -1,17 +1,32 @@
 package com.clh.iot.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.google.gson.Gson;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 public class UserController {
-    @GetMapping("/login")
-    public Object loginController(){
-        Map map = new HashMap();
-        map.put("result",1); //1 :正确  ，0 错误  ，-1服务器异常
-        return  map;
+
+
+    @PostMapping("/login")
+    public Object loginController( @RequestBody String body){
+        Gson gson = new Gson();
+        Map mapP =gson.fromJson(body,Map.class);
+        Map<String,String> bodyMap =  gson.fromJson((String)mapP.get("body"),Map.class);
+        String username=bodyMap.get("username");
+        String password=bodyMap.get("password");
+
+        Map mapR = new HashMap();
+        //模拟用户名密码输入正确
+        if(username.equals("caolihua")&&password.equals("111111")){
+            mapR.put("result",1);
+            return mapR;
+        }
+        //模拟用户名密码输入错误
+        mapR.put("result",2);
+        return  mapR;
+
     }
 }

@@ -24,7 +24,8 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
             //模拟服务端读取IO 用时
             Random ra =new Random();
 
-            Thread.sleep(ra.nextInt(10));
+            //Thread.sleep(2000);
+            System.out.println(ctx.channel());
             String responseStr = new String(array,"ascii");  //ascii码表示
 
             System.out.println("UDP-Server recevice And sendBack:["+responseStr+"]");

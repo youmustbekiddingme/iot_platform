@@ -20,22 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class UDPClient implements Runnable{
-    private final int id;
-    private int port=10000;
-    public UDPClient(int id) {
-        this.id = id;
-    }
-
-
-    @Override
-    public void run() {
-        try {
-            sendMessage(port,id+"");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+public class UDPClient {
 
     /**
      * 发送消息
@@ -72,9 +57,6 @@ public class UDPClient implements Runnable{
             //异步调用
           //  f.sync();
 
-
-
-
         }
         finally {
             group.shutdownGracefully();
@@ -87,7 +69,8 @@ public class UDPClient implements Runnable{
      */
     private static void addStartTime(String message){
         String startTime = message.substring(message.indexOf("-")+1,message.length());
-        Properties properties= ClhUtils.loadProperties(Const.DEVICE_PATH);
+        ClhUtils clhUtils = new ClhUtils();
+        Properties properties= clhUtils.loadProperties(Const.DEVICE_PATH);
         String key = message.substring(0,message.indexOf("-"));
         properties.put(key,startTime);
        // properties.getProperty(key);
