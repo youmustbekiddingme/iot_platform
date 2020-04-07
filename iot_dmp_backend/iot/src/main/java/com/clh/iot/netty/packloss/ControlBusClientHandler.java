@@ -1,12 +1,11 @@
 package com.clh.iot.netty.packloss;
 
-import com.clh.iot.netty.repo.UDPChannelRepo;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import com.clh.iot.config.Const;
+import com.clh.iot.util.ClhUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.util.Map;
+import java.util.Properties;
 
 public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
 
@@ -19,14 +18,25 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-        //TCP连接建立
+        //1.TCP连接建立
+        // 2.读取设备名
+        String deviceId= "A077468";
+        //3.创建文件A077468.properties,新增100 帧序号
+
+
+
 
 //        for(int i=0;i<1000;i++){
 //            UDPClient.sendMessage(10000);
 //            System.out.println("i="+i);
 //        }
+
+
+        {
             //启动UDP链路并发送1个报文
-            UDPClient.sendMessage(10000);
+            UDPClient.sendMessage(10000,"01");
+        }
+
 
 
             //计算时间、参数
@@ -57,6 +67,8 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        //断开连接
+        //删除local 文件
         System.out.println("ControllerBusClientHandler invoke");
         super.channelInactive(ctx);
     }

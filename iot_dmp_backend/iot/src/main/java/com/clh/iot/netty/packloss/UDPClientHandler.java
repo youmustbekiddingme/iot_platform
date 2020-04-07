@@ -1,13 +1,13 @@
 package com.clh.iot.netty.packloss;
 
-import com.clh.iot.netty.repo.UDPChannelRepo;
+import com.clh.iot.config.Const;
+import com.clh.iot.util.ClhUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.CharsetUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -27,7 +27,12 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) throws Exception {
         String response = datagramPacket.content().toString(CharsetUtil.US_ASCII);
-        response=response+"-"+System.currentTimeMillis();
+        response=response+","+System.currentTimeMillis();   //01-1586228905993,1586228908030
+        String key = response.substring(0,response.indexOf("-"));
+        String value = response.substring(response.indexOf("-")+1,response.length());
+        Map map  =  new HashMap();
+        map.put(key,value);
+        ClhUtils.writeToProperties(Const.DEVICE_PATH,map);
         System.out.println( "UDP-Client recevice:["+     response+"]");
     }
 
