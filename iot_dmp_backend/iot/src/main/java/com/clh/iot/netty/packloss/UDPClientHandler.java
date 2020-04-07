@@ -33,12 +33,13 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
         Map map  =  new HashMap();
         map.put(key,value);
         ClhUtils.writeToProperties(Const.DEVICE_PATH,map);
+        //主动断开连接
+        channelHandlerContext.close();
         System.out.println( "UDP-Client recevice:["+     response+"]");
     }
 
-
-
-
-
-
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+    }
 }

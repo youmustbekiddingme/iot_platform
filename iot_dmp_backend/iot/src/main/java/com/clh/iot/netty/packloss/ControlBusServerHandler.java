@@ -27,7 +27,8 @@ public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        //cause.printStackTrace();
+        System.out.printf("有一个TCP断开连接");
         ctx.close();
     }
 }

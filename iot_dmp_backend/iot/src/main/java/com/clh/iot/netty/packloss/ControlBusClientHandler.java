@@ -1,14 +1,20 @@
 package com.clh.iot.netty.packloss;
 
 import com.clh.iot.config.Const;
+import com.clh.iot.task.ThreadTaskId;
 import com.clh.iot.util.ClhUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
-
+    int i=99;
     /**
      * channel 激活时触发
      * TCP连接建立，此时触发10 秒100个udp报文
@@ -21,31 +27,24 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
         //1.TCP连接建立
         // 2.读取设备名
         String deviceId= "A077468";
-        //3.创建文件A077468.properties,新增100 帧序号
 
-
-
-
-//        for(int i=0;i<1000;i++){
-//            UDPClient.sendMessage(10000);
-//            System.out.println("i="+i);
-//        }
-
-
-        {
-            //启动UDP链路并发送1个报文
-            UDPClient.sendMessage(10000,"01");
+        //100个线程
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        for (int i = 0; i < 100; i++) {
+            executorService.execute(new UDPClient(i));
         }
+//        executorService.shutdown();
 
 
 
-            //计算时间、参数
 
-            //计算完 清空UDP MAP
+            //启动UDP链路并发送1个报文
+            Thread.sleep(10000);
 
 
-            //主动关闭TCP连接
-          //ctx.close();
+
+            //10s后主动关闭TCP连接
+          ctx.close();
 
 
 
@@ -69,8 +68,27 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //断开连接
         //删除local 文件
-        System.out.println("ControllerBusClientHandler invoke");
+        //System.out.println("ControllerBusClientHandler invoke");
         super.channelInactive(ctx);
+        //计算数据
+        Properties properties = ClhUtils.loadProperties(Const.DEVICE_PATH);
+        int udpPackNums=  properties.size();
+       //  Map delayTimeMap = new HashMap();
+        double delayTimeAll=0;
+        for (String key : properties.stringPropertyNames()) {
+            String val= properties.getProperty(key);
+            String times[]=val.split(",");
+            Long time1=Long.valueOf(times[0]);
+            Long time2=Long.valueOf(times[1]);
+            Long delayTimeOne=time2-time1;
+            //delayTimeMap.put(key,delayTimeOne);
+            delayTimeAll=delayTimeAll+delayTimeOne;
+        }
+        //System.out.println(delayTimeMap);
+        System.out.println("udp发送报文次数："+ properties.size());
+        System.out.println("总时延："+ delayTimeAll);
+        System.out.println("平均时延"+delayTimeAll/udpPackNums);
+        System.out.println("丢包率："+(1-properties.size()/100));
     }
 
 

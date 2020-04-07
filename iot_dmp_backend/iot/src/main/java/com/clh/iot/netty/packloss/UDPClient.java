@@ -20,15 +20,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class UDPClient {
+public class UDPClient implements Runnable{
+    private final int id;
+    private int port=10000;
+    public UDPClient(int id) {
+        this.id = id;
+    }
 
+
+    @Override
+    public void run() {
+        try {
+            sendMessage(port,id+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 发送消息
      * @param port  端口号
      * @throws Exception
      */
-    public static void sendMessage(int port,String nums)throws Exception{
+    public   void sendMessage(int port,String nums)throws Exception{
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
