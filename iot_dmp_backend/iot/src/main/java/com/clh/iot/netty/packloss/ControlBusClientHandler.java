@@ -15,7 +15,7 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
 
                     for(int i=0;i<Const.UDP_PACKAGE_NUMS;i++){
                         UDPClient udpClient = new UDPClient();
-                        udpClient.sendMessage(Const.UDP_SERVER_PORT,i+"");
+                        udpClient.sendMessage(Const.UDP_SERVER_PORT);
                     }
                     //睡眠5s后，强制关闭TCP链路
                     Thread.sleep(Const.TCP_CHANNEL_KEEP_TIME);
@@ -85,30 +85,30 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
         //删除local 文件
         //System.out.println("ControllerBusClientHandler invoke");
         super.channelInactive(ctx);
-        //计算数据
-        ClhUtils clhUtils  = new ClhUtils();
-        Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
-        int udpPackNums=  properties.size();
-       //  Map delayTimeMap = new HashMap();
-        double delayTimeAll=0;
-        for (String key : properties.stringPropertyNames()) {
-            String val= properties.getProperty(key);
-            String times[]=val.split(",");
-            Long time1=Long.valueOf(times[0]);
-            Long time2=Long.valueOf(times[1]);
-            Long delayTimeOne=time2-time1;
-            //delayTimeMap.put(key,delayTimeOne);
-            delayTimeAll=delayTimeAll+delayTimeOne;
-        }
-        //System.out.println(delayTimeMap);
-        System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
-        System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
-        System.out.println("总时延："+ delayTimeAll+"ms");
-        System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
-        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-properties.size()/Const.UDP_PACKAGE_NUMS));
-
-        //清空device文件
-        clhUtils.clearProperties(Const.DEVICE_PATH);
+//        //计算数据
+//        ClhUtils clhUtils  = new ClhUtils();
+//        Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
+//        int udpPackNums=  properties.size();
+//       //  Map delayTimeMap = new HashMap();
+//        double delayTimeAll=0;
+//        for (String key : properties.stringPropertyNames()) {
+//            String val= properties.getProperty(key);
+//            String times[]=val.split(",");
+//            Long time1=Long.valueOf(times[0]);
+//            Long time2=Long.valueOf(times[1]);
+//            Long delayTimeOne=time2-time1;
+//            //delayTimeMap.put(key,delayTimeOne);
+//            delayTimeAll=delayTimeAll+delayTimeOne;
+//        }
+//        //System.out.println(delayTimeMap);
+//        System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
+//        System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
+//        System.out.println("总时延："+ delayTimeAll+"ms");
+//        System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
+//        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-properties.size()/Const.UDP_PACKAGE_NUMS));
+//
+//        //清空device文件
+//        clhUtils.clearProperties(Const.DEVICE_PATH);
     }
 
 

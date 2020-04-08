@@ -9,6 +9,7 @@ import io.netty.util.CharsetUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -35,13 +36,13 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
         ClhUtils clhUtils = new ClhUtils();
         clhUtils.writeToProperties(Const.DEVICE_PATH,map);
         //主动断开连
-        channelHandlerContext.close();
-        System.out.println(channelHandlerContext.channel());
-        System.out.println( "UDP-Client recevice:["+     response+"]");
+
+        //channelHandlerContext.close();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        super.channelInactive(ctx);
+        super.channelInactive(ctx);  //计算统计数据
+
     }
 }

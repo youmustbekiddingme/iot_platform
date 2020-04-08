@@ -22,10 +22,8 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
             byte[] array = new byte[length];
             byteBuf.getBytes(byteBuf.readerIndex(), array);  //客户端透传 二进制 ，即计算机补码形式  :如AF =>1010 1111(补码)=>1101 0001(原码)  -81
             //模拟服务端读取IO 用时
-            Random ra =new Random();
 
-            //Thread.sleep(2000);
-            System.out.println(ctx.channel());
+            Thread.sleep(1500);
             String responseStr = new String(array,"ascii");  //ascii码表示
 
             System.out.println("UDP-Server recevice And sendBack:["+responseStr+"]");

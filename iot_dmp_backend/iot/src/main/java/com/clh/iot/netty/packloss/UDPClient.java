@@ -5,10 +5,7 @@ import com.clh.iot.config.Const;
 import com.clh.iot.util.ClhUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
@@ -19,6 +16,8 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class UDPClient {
 
@@ -27,7 +26,7 @@ public class UDPClient {
      * @param port  端口号
      * @throws Exception
      */
-    public   void sendMessage(int port,String nums)throws Exception{
+    public   void sendMessage(int port)throws Exception{
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
@@ -37,25 +36,54 @@ public class UDPClient {
 
 
             // 同步等待成功连接
-            ChannelFuture cf = bootstrap.connect().sync();
-            Long startTime = System.currentTimeMillis();
-            String message=nums+"-"+startTime;  //01-1586228905993
-            //测试future 为异步
-            Future future=  cf.channel().writeAndFlush(
+            ChannelFuture cf = bootstrap.connect();
+
+
+
+            ClhUtils clhUtils= new ClhUtils();
+
+            for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
+
+                Long startTime = System.currentTimeMillis();
+                String message=nums+"-"+startTime;  //01-1586228905993
+                //测试future 为异步
+                cf.channel().writeAndFlush(
                         new DatagramPacket(
                                 Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
                                 new InetSocketAddress(
                                         Const.UDP_SERVER_IP,port
-                                ))).sync();
-            System.out.println( "UDP-Client send:["+   message  +"]");
-            addStartTime(message);
+                                )));
+
+
+               // addStartTime(message);
+                while(true){
+
+                    Thread.sleep(200);
+                    Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
+
+                    if(properties.get(nums+"")!=null){
+                        System.out.println("UDP-Client send-back success:"+nums+":" +properties.get(nums+""));
+                        break;
+                    }
+                    if(System.currentTimeMillis()-startTime>3000){
+                        System.out.println("UDP-Client send-back failed:"+nums);
+                        break;
+                    }
+
+
+
+                }
+
+                if(nums==Const.UDP_PACKAGE_NUMS){
+                    calUdpResult();
+                }
+            }
+
 
             //阻塞保持链路，除非主动关闭
             cf.channel().closeFuture().sync();
 
 
-            //异步调用
-          //  f.sync();
 
         }
         finally {
@@ -73,29 +101,51 @@ public class UDPClient {
         Properties properties= clhUtils.loadProperties(Const.DEVICE_PATH);
         String key = message.substring(0,message.indexOf("-"));
         properties.put(key,startTime);
-       // properties.getProperty(key);
     }
     public static void main(String[] args) throws Exception{
-//        String xxx= "01-1586228905993";
-//        String yyy=xxx.substring(xxx.indexOf("-")+1,xxx.length());
-//        String zzz= xxx.substring(0,xxx.indexOf("-"));
-//        System.out.println(zzz);
+        Scanner sc = new Scanner(System.in);
 
-       // new UDPClient().sendMessage(10000,"01");
 
-//        Properties properties= ClhUtils.loadProperties(Const.DEVICE_PATH);
-//        properties.setProperty("01","qqqqz");
-//        properties.setProperty("testSong","Someone Like You");
-//        properties.setProperty("testQQ","只能说我认了,也许是你怕了");
+        try {
+            System.out.println("请输入UDP测试包数");
+            int nums = sc.nextInt();
+            Const.UDP_PACKAGE_NUMS=nums;
 
-//        Map map = new HashMap();
-//        ClhUtils.writeToProperties(Const.DEVICE_PATH,map);
-        String yyy="01-1586228905993,1586228908030";
-        String key=yyy.substring(0,yyy.indexOf("-"));
-        String value= yyy.substring(yyy.indexOf("-")+1,yyy.length());
-        System.out.println(key);
-        System.out.printf(value);
+        } catch (Exception e) {
+            System.out.println("数据数据异常");
+        }
 
+        UDPClient udpClient = new UDPClient();
+        udpClient.sendMessage(Const.UDP_SERVER_PORT);
+
+    }
+
+    /**
+     * 统计结果
+     */
+    private void calUdpResult(){
+        ClhUtils clhUtils  = new ClhUtils();
+        Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
+        int udpPackNums=  properties.size();
+        //  Map delayTimeMap = new HashMap();
+        double delayTimeAll=0;
+        for (String key : properties.stringPropertyNames()) {
+            String val= properties.getProperty(key);
+            String times[]=val.split(",");
+            Long time1=Long.valueOf(times[0]);
+            Long time2=Long.valueOf(times[1]);
+            Long delayTimeOne=time2-time1;
+            delayTimeAll=delayTimeAll+delayTimeOne;
+        }
+
+        System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
+        System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
+        System.out.println("总时延："+ delayTimeAll+"ms");
+        System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
+        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-properties.size()/Const.UDP_PACKAGE_NUMS));
+
+        //清空device文件
+        clhUtils.clearProperties(Const.DEVICE_PATH);
     }
 }
 

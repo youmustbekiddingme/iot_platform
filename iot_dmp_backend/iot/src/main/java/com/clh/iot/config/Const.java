@@ -1,11 +1,5 @@
 package com.clh.iot.config;
 
-import com.clh.iot.util.ClhUtils;
-
-import javax.sound.midi.Soundbank;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 public class Const {
     public static String DEVICE_PATH="device.properties"; //设备文件time
