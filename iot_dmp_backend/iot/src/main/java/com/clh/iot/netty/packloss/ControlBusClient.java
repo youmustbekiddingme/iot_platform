@@ -49,14 +49,11 @@ public class ControlBusClient {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("请输入UDP测试包数量nums：0<nums<=200");
+        System.out.println("请输入UDP测试包数量nums");
         try {
             int nums = sc.nextInt();
             Const.UDP_PACKAGE_NUMS=nums;
-            if(nums>200||nums<0){
-                System.out.println("请输入一个小于200大于0的值");
-                return;
-            }
+
             System.out.println("输入了一个数字"+nums);
         } catch (Exception e) {
             System.out.println("请输入一个数字");

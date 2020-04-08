@@ -20,8 +20,8 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
             udpClient.sendMessage(10000,i+"");
         }
 
-
-        Thread.sleep(5000);
+        //事件通知，这里写的不对
+        // Thread.sleep(1); //事件通知
         //10s后主动关闭TCP连接
         ctx.close();
 
