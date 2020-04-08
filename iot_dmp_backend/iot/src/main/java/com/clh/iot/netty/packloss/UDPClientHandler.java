@@ -36,6 +36,7 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
         clhUtils.writeToProperties(Const.DEVICE_PATH,map);
         //主动断开连
         channelHandlerContext.close();
+        System.out.println(channelHandlerContext.channel());
         System.out.println( "UDP-Client recevice:["+     response+"]");
     }
 
