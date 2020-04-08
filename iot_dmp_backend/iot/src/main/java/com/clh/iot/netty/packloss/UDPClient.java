@@ -33,7 +33,7 @@ public class UDPClient {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group).channel(NioDatagramChannel.class)
                     .option(ChannelOption.SO_BROADCAST,true)
-                    .handler(new UDPClientHandler()).remoteAddress(new InetSocketAddress("localhost", port));
+                    .handler(new UDPClientHandler()).remoteAddress(new InetSocketAddress(Const.UDP_SERVER_IP, port));
 
 
             // 同步等待成功连接
@@ -45,7 +45,7 @@ public class UDPClient {
                         new DatagramPacket(
                                 Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
                                 new InetSocketAddress(
-                                        "localhost",port
+                                        Const.UDP_SERVER_IP,port
                                 ))).sync();
             System.out.println( "UDP-Client send:["+   message  +"]");
             addStartTime(message);

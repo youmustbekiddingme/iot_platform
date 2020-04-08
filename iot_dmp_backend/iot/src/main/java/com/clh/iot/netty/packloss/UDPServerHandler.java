@@ -43,7 +43,7 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
             throws Exception {
         //防止服务关闭
-        //ctx.close();
+        ctx.close();
         cause.printStackTrace();
     }
 

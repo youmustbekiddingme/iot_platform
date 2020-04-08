@@ -8,25 +8,14 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Const {
-    public static String DEVICE_PATH="device.properties";
- // public static String DEVICE_PATH="D:\\caolihua\\projects\\iot_platform\\iot_dmp_backend\\iot\\src\\main\\resources\\device.properties";
-   public static int UDP_PACKAGE_NUMS=0;
+    public static String DEVICE_PATH="device.properties"; //设备文件time
+    public static String UDP_SERVER_IP="192.168.0.59";//UDP 服务端地址
+    public static String TCP_SERVER_IP="192.168.0.59";//TCP服务端地址
+    public static int UDP_SERVER_PORT=10000;//UDP 端口号
+    public static int TCP_SERVER_PORT=8080;//TCP端口号
+   public static int UDP_PACKAGE_NUMS=0;  //UDP报文发送数
+   public static int TCP_CHANNEL_KEEP_TIME=5000;  //TCP链路保持时间
     public static void main(String[] args) {
-//        Properties properties = ClhUtils.loadProperties(Const.DEVICE_PATH);
-//        int udpPackNums=  properties.size();
-//        Map delayTimeMap = new HashMap();
-//        Long delayTimeAll=0l;
-//        for (String key : properties.stringPropertyNames()) {
-//            String val= properties.getProperty(key);
-//            String times[]=val.split(",");
-//            Long time1=Long.valueOf(times[0]);
-//            Long time2=Long.valueOf(times[1]);
-//            Long delayTimeOne=time2-time1;
-//            //delayTimeMap.put(key,delayTimeOne);
-//            delayTimeAll=delayTimeAll+delayTimeOne;
-//        }
-//        //System.out.println(delayTimeMap);
-//        System.out.println(delayTimeAll);
-//        System.out.println(delayTimeAll/udpPackNums);
+
     }
 }

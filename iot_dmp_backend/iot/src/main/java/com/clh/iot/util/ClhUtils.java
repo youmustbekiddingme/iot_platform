@@ -76,6 +76,29 @@ public class ClhUtils {
     }
 
     /**
+     * 清空
+     * @param filename
+     */
+    public void clearProperties(String filename){
+        Properties properties= loadProperties(filename);
+        FileOutputStream fos=null;
+        try {
+            fos = new FileOutputStream(filename,false);
+            OutputStreamWriter opw = new OutputStreamWriter(fos,"utf-8");
+            properties.clear();
+            properties.store(opw,"write data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * 将字节数组转为16进制字符串
      * @param bytes
      * @return

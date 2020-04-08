@@ -49,16 +49,18 @@ public class ControlBusClient {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("请输入UDP测试包数量nums");
+
         try {
+            System.out.println("请输入UDP测试包数");
             int nums = sc.nextInt();
             Const.UDP_PACKAGE_NUMS=nums;
-
-            System.out.println("输入了一个数字"+nums);
+            System.out.println("请输入TCP链路维持时间(ms)");
+            int millTime=sc.nextInt();
+            Const.TCP_CHANNEL_KEEP_TIME=millTime;
         } catch (Exception e) {
-            System.out.println("请输入一个数字");
+            System.out.println("数据数据异常");
         }
-        new ControlBusClient("localhost", 8080).start();
+        new ControlBusClient(Const.TCP_SERVER_IP, Const.TCP_SERVER_PORT).start();
 
     }
 }

@@ -6,6 +6,38 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.util.Properties;
 public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
+    private Object lock =new Object();
+
+
+    private void doSendMessage(){
+        synchronized (lock){
+            try {
+
+                    for(int i=0;i<Const.UDP_PACKAGE_NUMS;i++){
+                        UDPClient udpClient = new UDPClient();
+                        udpClient.sendMessage(Const.UDP_SERVER_PORT,i+"");
+                    }
+                    //睡眠5s后，强制关闭TCP链路
+                    Thread.sleep(Const.TCP_CHANNEL_KEEP_TIME);
+                    lock.notify();
+            } catch (Exception e) {
+                    e.printStackTrace();
+            }
+        }
+
+    }
+    private void doClose(ChannelHandlerContext ctx){
+        synchronized (lock){
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ctx.close();
+        }
+    }
+
+
     /**
      * channel 激活时触发
      * TCP连接建立，此时触发10 秒100个udp报文
@@ -15,15 +47,22 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-        for(int i=0;i<Const.UDP_PACKAGE_NUMS;i++){
-            UDPClient udpClient = new UDPClient();
-            udpClient.sendMessage(10000,i+"");
-        }
+        ControlBusClientHandler controlBusClientHandler = new ControlBusClientHandler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                controlBusClientHandler.doClose(ctx);
+            }
+        },"t2").start();
+        Thread.sleep(1000);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                controlBusClientHandler.doSendMessage();
+            }
+        },"t1").start();
 
-        //事件通知，这里写的不对
-        // Thread.sleep(1); //事件通知
-        //10s后主动关闭TCP连接
-        ctx.close();
+
 
 
         //向TCP Server 发送数据
@@ -62,10 +101,14 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
             delayTimeAll=delayTimeAll+delayTimeOne;
         }
         //System.out.println(delayTimeMap);
-        System.out.println("udp发送报文次数："+ properties.size()+"次");
+        System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
+        System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
         System.out.println("总时延："+ delayTimeAll+"ms");
         System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
         System.out.println("丢包率："+ ClhUtils.PercentNums  (1-properties.size()/Const.UDP_PACKAGE_NUMS));
+
+        //清空device文件
+        clhUtils.clearProperties(Const.DEVICE_PATH);
     }
 
 
