@@ -7,8 +7,12 @@ import java.util.Scanner;
 
 public class Test2 {
     public static void main(String[] args) {
-        Const.UDP_PACKAGE_NUMS=100;
-
-        System.out.println(Const.UDP_PACKAGE_NUMS);
+        int length=1000;
+        StringBuilder stringBuilder = new StringBuilder(    );
+        for(int i=0;i<length;i++){
+            stringBuilder.append("A");
+        }
+        String playLoad= stringBuilder.toString();
+        System.out.println(playLoad);
     }
 }

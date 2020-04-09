@@ -1,4 +1,4 @@
-package com.clh.iot.netty.packloss;
+package com.clh.iot.netty.capacity;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {

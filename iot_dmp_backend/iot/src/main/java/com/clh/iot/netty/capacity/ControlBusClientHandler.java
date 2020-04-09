@@ -1,10 +1,10 @@
-package com.clh.iot.netty.packloss;
+package com.clh.iot.netty.capacity;
 
 import com.clh.iot.config.Const;
-import com.clh.iot.util.ClhUtils;
+import com.clh.iot.netty.packloss.UDPClient;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import java.util.Properties;
+
 public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
     private Object lock =new Object();
 

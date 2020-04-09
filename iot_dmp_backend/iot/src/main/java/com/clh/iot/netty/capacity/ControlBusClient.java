@@ -1,4 +1,4 @@
-package com.clh.iot.netty.packloss;
+package com.clh.iot.netty.capacity;
 
 import com.clh.iot.config.Const;
 import io.netty.bootstrap.Bootstrap;

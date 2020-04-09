@@ -35,10 +35,17 @@ public class UDPClient {
 
             ClhUtils clhUtils= new ClhUtils();
 
+            //playload
+//            int lengthX=1000;
+//            StringBuilder stringBuilder = new StringBuilder(    );
+//            for(int i=0;i<lengthX;i++){
+//                stringBuilder.append("A");
+//            }
+//            String playLoad= stringBuilder.toString();
             for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
 
                 Long startTime = System.currentTimeMillis();
-                String message=nums+"-"+startTime;  //01-1586228905993
+                String message= nums+"-"+startTime;  //01-1586228905993
                 //测试future 为异步
                 cf.channel().writeAndFlush(
                         new DatagramPacket(
