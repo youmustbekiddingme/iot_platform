@@ -10,35 +10,28 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.CharsetUtil;
-import io.netty.util.concurrent.Future;
-
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+
 
 public class UDPClient {
 
     /**
      * 发送消息
-     * @param port  端口号
      * @throws Exception
      */
-    public   void sendMessage(int port)throws Exception{
+    public   void sendMessage()throws Exception{
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group).channel(NioDatagramChannel.class)
                     .option(ChannelOption.SO_BROADCAST,true)
-                    .handler(new UDPClientHandler()).remoteAddress(new InetSocketAddress(Const.UDP_SERVER_IP, port));
+                    .handler(new UDPClientHandler()).remoteAddress(new InetSocketAddress(Const.UDP_SERVER_IP, Const.UDP_SERVER_PORT));
 
 
             // 同步等待成功连接
             ChannelFuture cf = bootstrap.connect();
-
-
 
             ClhUtils clhUtils= new ClhUtils();
 
@@ -51,21 +44,22 @@ public class UDPClient {
                         new DatagramPacket(
                                 Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
                                 new InetSocketAddress(
-                                        Const.UDP_SERVER_IP,port
-                                )));
+                                        Const.UDP_SERVER_IP,Const.UDP_SERVER_PORT
+                                ))
+                );
 
 
                // addStartTime(message);
                 while(true){
 
-                    Thread.sleep(200);
+                    Thread.sleep(Const.UDP_HEART_BEAT);//200
                     Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
 
                     if(properties.get(nums+"")!=null){
                         System.out.println("UDP-Client send-back success:"+nums+":" +properties.get(nums+""));
                         break;
                     }
-                    if(System.currentTimeMillis()-startTime>3000){
+                    if(System.currentTimeMillis()-startTime>Const.UDP_SEND_REC_DELAY_TIME){  //3000
                         System.out.println("UDP-Client send-back failed:"+nums);
                         break;
                     }
@@ -103,20 +97,51 @@ public class UDPClient {
         properties.put(key,startTime);
     }
     public static void main(String[] args) throws Exception{
+        ClhUtils clhUtils = new ClhUtils();
+        clhUtils.clearProperties(Const.DEVICE_PATH);
         Scanner sc = new Scanner(System.in);
+        System.out.println("系统默认配置-UDP测试包数N："+Const.UDP_PACKAGE_NUMS+"，"+"UDP-SERVER模拟延迟时间(ms):"+Const.UDP_SERVER_DELAY_TIME
+                +"，"+"UDP收发超时时间(ms):"+Const.UDP_SEND_REC_DELAY_TIME+ "，UDP-SERVER-IP:"+ Const.UDP_SERVER_IP+
+                "，UDP-SERVER-PORT:"+Const.UDP_SERVER_PORT    + "，UDP-HEARTBEAT(ms):"+Const.UDP_HEART_BEAT+           "。"
+        );
+
+        System.out.println("是否采用默认系统配置？  1 YES,0 NO");
+        int flag = sc.nextInt();
+        if(flag==0){
+            try {
+
+                System.out.println("请输入UDP测试包数N：");
+                int packNums = sc.nextInt();
+                Const.UDP_PACKAGE_NUMS=packNums;
+
+                System.out.println("请设定UDP丢包超时时间：");
+                int udpSendRecDelayTime=sc.nextInt();
+                Const.UDP_SEND_REC_DELAY_TIME=udpSendRecDelayTime;
+
+                System.out.println("请设定UDP-SERVER-PORT");
+                Const.UDP_SERVER_PORT=sc.nextInt();
+
+                System.out.println("请设定UDP-SERVER-IP");
+                Const.UDP_SERVER_IP=sc.next();
+
+                System.out.println("请设定UDP_HEART_BEAT");
+                Const.UDP_HEART_BEAT=sc.nextInt();
 
 
-        try {
-            System.out.println("请输入UDP测试包数");
-            int nums = sc.nextInt();
-            Const.UDP_PACKAGE_NUMS=nums;
-
-        } catch (Exception e) {
-            System.out.println("数据数据异常");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else if(flag==1){
+            //采用系统默认配置
+        }else{
+            System.out.println("请输入有效的数字");
+            return ;
         }
 
+
         UDPClient udpClient = new UDPClient();
-        udpClient.sendMessage(Const.UDP_SERVER_PORT);
+        udpClient.sendMessage();
+
 
     }
 

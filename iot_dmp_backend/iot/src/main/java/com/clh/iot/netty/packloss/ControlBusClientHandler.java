@@ -15,7 +15,7 @@ public class ControlBusClientHandler  extends ChannelInboundHandlerAdapter {
 
                     for(int i=0;i<Const.UDP_PACKAGE_NUMS;i++){
                         UDPClient udpClient = new UDPClient();
-                        udpClient.sendMessage(Const.UDP_SERVER_PORT);
+                        udpClient.sendMessage();
                     }
                     //睡眠5s后，强制关闭TCP链路
                     Thread.sleep(Const.TCP_CHANNEL_KEEP_TIME);

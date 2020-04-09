@@ -1,12 +1,14 @@
 package com.clh.iot;
 
+import com.clh.iot.config.Const;
+import com.clh.iot.util.ClhUtils;
+
+import java.util.Scanner;
+
 public class Test2 {
     public static void main(String[] args) {
-            for(int i=0;i<=5;i++){
-                System.out.println(i);
-                if(i==6){
-                    System.out.println(i);
-                }
-            }
+        Const.UDP_PACKAGE_NUMS=100;
+
+        System.out.println(Const.UDP_PACKAGE_NUMS);
     }
 }
