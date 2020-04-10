@@ -3,7 +3,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
     private int counter;
-
+    Long startTime;
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
@@ -21,6 +21,19 @@ public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         String body = (String) msg;
+        if(body.contains("!")){
+            System.out.println("Begin Download.....");
+            startTime=System.currentTimeMillis();
+        }
+        if(body.contains("#")){
+           Long   endTime=System.currentTimeMillis();
+            Long costTime = endTime-startTime;
+            System.out.println(costTime);
+        }
+
+
+
+
         System.out.println("服务端收到消息内容为：" + body + ", 收到消息次数：" + ++counter);
 
     }

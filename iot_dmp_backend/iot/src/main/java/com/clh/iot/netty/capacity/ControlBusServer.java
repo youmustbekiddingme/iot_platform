@@ -11,6 +11,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 public class ControlBusServer {
     private int port;
@@ -36,8 +37,11 @@ public class ControlBusServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
 
-                            ByteBuf delimiter = Unpooled.copiedBuffer("&_".getBytes());//解决拆包粘包
+//                            //分隔符
+                            ByteBuf delimiter = Unpooled.copiedBuffer("&".getBytes());//解决拆包粘包
                             ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024,false, delimiter));
+                            //固定帧数
+//                            ch.pipeline().addLast(new FixedLengthFrameDecoder(300));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new ControlBusServerHandler());
                         }
@@ -59,11 +63,9 @@ public class ControlBusServer {
 
 
     public static void main(String[] args) throws Exception {
-        int port = 8080;
+        int port = 9999;
 
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
-        }
+
 
         new ControlBusServer(port).run();
     }
