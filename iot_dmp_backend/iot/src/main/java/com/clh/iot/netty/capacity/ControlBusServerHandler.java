@@ -34,7 +34,7 @@ public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
 
 
 
-        System.out.println("服务端收到消息内容为：" + body + ", 收到消息次数：" + ++counter);
+   //     System.out.println("服务端收到消息内容为：" + body + ", 收到消息次数：" + ++counter);
 
     }
 
