@@ -18,9 +18,9 @@ export default new Router({
       component: (resolve) => require(['@/pages/index/register'], resolve)
     },
     {
-      path: '/device',
-      name: 'device',
-      component: (resolve) => require(['@/pages/device/device'], resolve)
+      path: '/manage',
+      name: 'manage',
+      component: (resolve) => require(['@/pages/manage/manage'], resolve)
     },
     {
       path: '/dialog',
