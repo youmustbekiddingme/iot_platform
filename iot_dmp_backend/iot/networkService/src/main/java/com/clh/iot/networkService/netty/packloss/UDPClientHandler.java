@@ -1,7 +1,7 @@
-package com.clh.iot.network.netty.packloss;
+package com.clh.iot.networkService.netty.packloss;
 
-import com.clh.iot.network.config.Const;
-import com.clh.iot.network.util.ClhUtils;
+import com.clh.iot.networkService.config.Const;
+import com.clh.iot.networkService.util.ClhUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
@@ -10,12 +10,6 @@ import io.netty.util.CharsetUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * Created by IntelliJ IDEA 14.
- * User: karl.zhao
- * Time: 2016/1/21 0021.
- */
 public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket>{
 
     /**
@@ -34,14 +28,11 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
         map.put(key,value);
         ClhUtils clhUtils = new ClhUtils();
         clhUtils.writeToProperties(Const.DEVICE_PATH,map);
-        //主动断开连
-
         //channelHandlerContext.close();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        super.channelInactive(ctx);  //计算统计数据
-
+        super.channelInactive(ctx);
     }
 }

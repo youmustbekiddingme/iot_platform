@@ -1,4 +1,4 @@
-package com.clh.iot.network;
+package com.clh.iot.networkService;
 
 public class Test2 {
     public static void main(String[] args) {

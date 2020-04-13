@@ -1,6 +1,6 @@
-package com.clh.iot.network.netty.packloss;
+package com.clh.iot.networkService.netty.packloss;
 
-import com.clh.iot.network.config.Const;
+import com.clh.iot.networkService.config.Const;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,17 +13,15 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) {
-        String value="";
+        String value;
         try{
             ByteBuf byteBuf = packet.content();
-            //上面说了,通过content()来获取消息内容
             int length = byteBuf.readableBytes();
             byte[] array = new byte[length];
-            byteBuf.getBytes(byteBuf.readerIndex(), array);  //客户端透传 二进制 ，即计算机补码形式  :如AF =>1010 1111(补码)=>1101 0001(原码)  -81
+            byteBuf.getBytes(byteBuf.readerIndex(), array);
 
-            //模拟服务端读取IO 用时
-            Thread.sleep(Const.UDP_SERVER_DELAY_TIME); //1000
-            String responseStr = new String(array,"ascii");  //ascii码表示
+            Thread.sleep(Const.UDP_SERVER_DELAY_TIME);
+            String responseStr = new String(array,"ascii");
 
             System.out.println("UDP-Server recevice And sendBack:["+responseStr+"]");
 
@@ -39,7 +37,6 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
             throws Exception {
-        //防止服务关闭
         ctx.close();
         cause.printStackTrace();
     }

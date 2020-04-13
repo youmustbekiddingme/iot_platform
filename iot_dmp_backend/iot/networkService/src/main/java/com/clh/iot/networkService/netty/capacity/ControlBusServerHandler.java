@@ -1,4 +1,4 @@
-package com.clh.iot.network.netty.capacity;
+package com.clh.iot.networkService.netty.capacity;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
@@ -30,17 +30,12 @@ public class ControlBusServerHandler extends ChannelInboundHandlerAdapter {
             Long costTime = endTime-startTime;
             System.out.println(costTime);
         }
-
-
-
-
        System.out.println("服务端收到消息内容为：" + body + ", 收到消息次数：" + ++counter);
 
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        //cause.printStackTrace();
         System.out.printf("有一个TCP断开连接");
         ctx.close();
     }

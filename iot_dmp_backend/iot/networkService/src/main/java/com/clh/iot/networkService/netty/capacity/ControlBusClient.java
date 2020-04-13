@@ -1,6 +1,6 @@
-package com.clh.iot.network.netty.capacity;
+package com.clh.iot.networkService.netty.capacity;
 
-import com.clh.iot.network.config.Const;
+import com.clh.iot.networkService.config.Const;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -26,13 +26,12 @@ public class ControlBusClient {
                         public void initChannel(SocketChannel ch)throws Exception {
                             ch.pipeline().addLast(new ControlBusClientHandler());
                         } });
-            //连接到服务端，connect是异步链接，再调用同步方法sync，等待连接成功
+
             ChannelFuture f = bootstrap.connect().sync();
 
             //阻塞直到客户端通道关闭。不主动关闭，一直建立连接
             f.channel().closeFuture().sync();
         } finally {
-            //优雅退出，释放NIO线程组
             group.shutdownGracefully().sync();
         }
     }

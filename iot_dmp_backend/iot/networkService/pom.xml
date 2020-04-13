@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>network</artifactId>
+    <artifactId>networkService</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -27,4 +27,17 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>networkService</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--这里写上main方法所在类的路径-->
+                <configuration>
+                    <mainClass>com.clh.iot.networkService.IotApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

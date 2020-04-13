@@ -1,8 +1,8 @@
-package com.clh.iot.network.netty.packloss;
+package com.clh.iot.networkService.netty.packloss;
 
 
-import com.clh.iot.network.config.Const;
-import com.clh.iot.network.util.ClhUtils;
+import com.clh.iot.networkService.config.Const;
+import com.clh.iot.networkService.util.ClhUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -29,24 +29,13 @@ public class UDPClient {
                     .option(ChannelOption.SO_BROADCAST,true)
                     .handler(new UDPClientHandler()).remoteAddress(new InetSocketAddress(Const.UDP_SERVER_IP, Const.UDP_SERVER_PORT));
 
-
-            // 同步等待成功连接
             ChannelFuture cf = bootstrap.connect();
 
             ClhUtils clhUtils= new ClhUtils();
-
-            //playload
-//            int lengthX=1000;
-//            StringBuilder stringBuilder = new StringBuilder(    );
-//            for(int i=0;i<lengthX;i++){
-//                stringBuilder.append("A");
-//            }
-//            String playLoad= stringBuilder.toString();
             for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
 
                 Long startTime = System.currentTimeMillis();
                 String message= nums+"-"+startTime;  //01-1586228905993
-                //测试future 为异步
                 cf.channel().writeAndFlush(
                         new DatagramPacket(
                                 Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
@@ -56,12 +45,9 @@ public class UDPClient {
                 );
 
 
-               // addStartTime(message);
                 while(true){
-
                     Thread.sleep(Const.UDP_HEART_BEAT);//200
                     Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
-
                     if(properties.get(nums+"")!=null){
                         System.out.println("UDP-Client send-back success:"+nums+":" +properties.get(nums+""));
                         break;
@@ -70,8 +56,6 @@ public class UDPClient {
                         System.out.println("UDP-Client send-back failed:"+nums);
                         break;
                     }
-
-
 
                 }
 

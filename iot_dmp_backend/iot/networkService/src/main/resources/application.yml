@@ -1,0 +1,13 @@
+
+#params:
+#  devicePath: device.properties
+#  networkService:
+#    tcp:
+#      ip: 192.168.0.59
+#      port: 9999
+#    udp:
+#      ip: 192.168.0.59
+#      port: 10000
+#      heartbeat: 200
+#      packNums: 100
+#      sendReceiveDelayTime: 3000

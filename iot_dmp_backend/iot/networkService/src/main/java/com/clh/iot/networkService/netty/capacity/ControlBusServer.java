@@ -1,5 +1,6 @@
-package com.clh.iot.network.netty.capacity;
+package com.clh.iot.networkService.netty.capacity;
 
+import com.clh.iot.networkService.config.Const;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,20 +12,15 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+import javax.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
+
+@Component
 public class ControlBusServer {
-    private int port;
-
-    public ControlBusServer(int port){
-        this.port = port;
-    }
-
     public void run() throws Exception{
-
         //配置服务端的线程组
         EventLoopGroup bossGroup = new NioEventLoopGroup();
-
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
         try{
@@ -37,10 +33,8 @@ public class ControlBusServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
 
-//                            //分隔符
-                            ByteBuf delimiter = Unpooled.copiedBuffer("&".getBytes());//解决拆包粘包
+                            ByteBuf delimiter = Unpooled.copiedBuffer("&".getBytes());
                             ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024,false, delimiter));
-                            //固定帧数
 //                            ch.pipeline().addLast(new FixedLengthFrameDecoder(300));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new ControlBusServerHandler());
@@ -48,13 +42,10 @@ public class ControlBusServer {
                     });
 
             System.out.println("Echo 服务器启动");
-            //绑定端口，同步等待成功
-            ChannelFuture channelFuture =  serverBootstrap.bind(port).sync();
-            //等待服务端监听端口关闭
+            ChannelFuture channelFuture =  serverBootstrap.bind(Const.TCP_SERVER_PORT).sync();
             channelFuture.channel().closeFuture().sync();
 
         }finally {
-            //优雅退出，释放线程池
             workGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
@@ -63,11 +54,8 @@ public class ControlBusServer {
 
 
     public static void main(String[] args) throws Exception {
-        int port = 9999;
-
-
-
-        new ControlBusServer(port).run();
+        ControlBusServer controlBusServer = new ControlBusServer();
+        controlBusServer.run();;
     }
 
 }
