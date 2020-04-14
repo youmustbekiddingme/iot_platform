@@ -13,7 +13,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
-import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 @Component

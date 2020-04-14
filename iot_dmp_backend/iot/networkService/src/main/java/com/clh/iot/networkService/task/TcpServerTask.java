@@ -1,17 +1,19 @@
 package com.clh.iot.networkService.task;
 
-import com.clh.iot.networkService.netty.packloss.UDPServer;
+import com.clh.iot.networkService.netty.capacity.ControlBusServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Callable;
+
 @Component
-public class UdpTask implements Callable {
+public class TcpServerTask implements Callable {
     @Autowired
-    private UDPServer udpServer;
+    private ControlBusServer controlBusServer;
+
     @Override
     public Object call() throws Exception {
-        udpServer.run();
+        controlBusServer.run();
         return null;
     }
 }

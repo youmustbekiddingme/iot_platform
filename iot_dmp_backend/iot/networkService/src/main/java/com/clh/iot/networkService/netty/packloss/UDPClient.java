@@ -3,6 +3,7 @@ package com.clh.iot.networkService.netty.packloss;
 
 import com.clh.iot.networkService.config.Const;
 import com.clh.iot.networkService.util.ClhUtils;
+import com.google.gson.Gson;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -10,13 +11,20 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.CharsetUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
-
+@Component
 public class UDPClient {
-
+    private static final Logger logger =
+            LoggerFactory.getLogger("networkService");
     /**
      * 发送消息
      * @throws Exception
@@ -32,10 +40,15 @@ public class UDPClient {
             ChannelFuture cf = bootstrap.connect();
 
             ClhUtils clhUtils= new ClhUtils();
-            for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
+            String deviceId=Const.deviceId;
+            String key;
 
+            String playLoad=   preparePlayLoad(1000);
+
+            for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
+                key=deviceId+"_"+ nums;
                 Long startTime = System.currentTimeMillis();
-                String message= nums+"-"+startTime;  //01-1586228905993
+                String message=key+"-"+playLoad+","+startTime;  //01-1586228905993
                 cf.channel().writeAndFlush(
                         new DatagramPacket(
                                 Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
@@ -48,12 +61,13 @@ public class UDPClient {
                 while(true){
                     Thread.sleep(Const.UDP_HEART_BEAT);//200
                     Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
-                    if(properties.get(nums+"")!=null){
-                        System.out.println("UDP-Client send-back success:"+nums+":" +properties.get(nums+""));
+                    if(properties.get(key)!=null){
+                        logger.info("UDP-Client send-back success:"+key+":" +properties.get(key));
+                      //  System.out.println("UDP-Client send-back success:"+key+":" +properties.get(key));
                         break;
                     }
                     if(System.currentTimeMillis()-startTime>Const.UDP_SEND_REC_DELAY_TIME){  //3000
-                        System.out.println("UDP-Client send-back failed:"+nums);
+                        System.out.println("UDP-Client send-back failed:"+key);
                         break;
                     }
 
@@ -76,17 +90,7 @@ public class UDPClient {
         }
     }
 
-    /**
-     * 新增某一帧开始时间
-     * @param message
-     */
-    private static void addStartTime(String message){
-        String startTime = message.substring(message.indexOf("-")+1,message.length());
-        ClhUtils clhUtils = new ClhUtils();
-        Properties properties= clhUtils.loadProperties(Const.DEVICE_PATH);
-        String key = message.substring(0,message.indexOf("-"));
-        properties.put(key,startTime);
-    }
+
     public static void main(String[] args) throws Exception{
         ClhUtils clhUtils = new ClhUtils();
         clhUtils.clearProperties(Const.DEVICE_PATH);
@@ -153,15 +157,44 @@ public class UDPClient {
             Long delayTimeOne=time2-time1;
             delayTimeAll=delayTimeAll+delayTimeOne;
         }
-
+        double size = properties.size();
         System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
         System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
         System.out.println("总时延："+ delayTimeAll+"ms");
         System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
-        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-properties.size()/Const.UDP_PACKAGE_NUMS));
+        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
+//        packSendAllNums: UDP总报文数
+//        packSuccessNums: UDP成功报文数
+//        delayAllTime: 总时延
+//        delayAvgTime: 平均时延
+//        packLostRate: 丢包率
+
+        Map mapRes = new HashMap();
+        mapRes.put("packSendAllNums",Const.UDP_PACKAGE_NUMS);
+        mapRes.put("packSuccessNums",udpPackNums);
+        mapRes.put("delayAllTime",delayTimeAll);
+        mapRes.put("delayAvgTime",udpPackNums);
+        mapRes.put("packLostRate",ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
+        Gson gson = new Gson();
+
+        logger.info(gson.toJson(mapRes));
 
         //清空device文件
-        clhUtils.clearProperties(Const.DEVICE_PATH);
+       clhUtils.clearProperties(Const.DEVICE_PATH);
+    }
+
+
+    /**
+     * 准备playload
+     * @return
+     */
+    private String preparePlayLoad(int lenght){
+        StringBuilder   sb = new StringBuilder();
+        for(int i=0;i<1000;i++){
+            sb.append("A");
+        }
+
+        return sb.toString();
     }
 }
 

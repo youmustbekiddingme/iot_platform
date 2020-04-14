@@ -5,7 +5,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>network</module>
+		<module>networkService</module>
 		<module>common</module>
 		<module>eureka</module>
         <module>gateway</module>
@@ -35,7 +35,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${Finchley.SR2}</version>
+				<version>${springcloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

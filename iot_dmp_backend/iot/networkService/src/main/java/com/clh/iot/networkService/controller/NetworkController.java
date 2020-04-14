@@ -1,8 +1,8 @@
 package com.clh.iot.networkService.controller;
 
-import com.clh.iot.networkService.netty.packloss.UDPServer;
-import com.clh.iot.networkService.task.TcpTask;
-import com.clh.iot.networkService.task.UdpTask;
+import com.clh.iot.networkService.task.TcpServerTask;
+import com.clh.iot.networkService.task.UdpClientTask;
+import com.clh.iot.networkService.task.UdpServerTask;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +12,18 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @RestController
-public class UserController{
-
+public class NetworkController {
+    private static final Logger logger =
+            LoggerFactory.getLogger("networkService");
     @Autowired
-    private TcpTask tcpTask;
+    private TcpServerTask tcpServerTaskTask;
     @Autowired
-    private UdpTask udpTask;
-
+    private UdpServerTask udpServerTask;
+    @Autowired
+    private UdpClientTask udpClientTask;
 
     @PostMapping("/login")
     public Object loginController( @RequestBody String body){
@@ -38,24 +41,47 @@ public class UserController{
         }
         //模拟用户名密码输入错误
         mapR.put("result",2);
+
         return  mapR;
 
     }
 
-    @GetMapping("/tcp")
-    public Object tcpNetty(){
+    /**
+     * 开启TCP-SERVER
+     * @return
+     */
+    @GetMapping("/onTcpServer")
+    public Object tcpServerNetty(){
         Map map = new HashMap();map.put("开启进程","TCP-SERVER");
         System.out.println("开启TCP进程");
-        executeTask(tcpTask);
+        executeTask(tcpServerTaskTask);
         return map;
     }
 
-    @GetMapping("/udp")
-    public Object udpNetty(){
+    /**
+     * 开启UDP-SERVER
+     * @return
+     */
+    @GetMapping("/onUdpServer")
+    public Object udpServerNetty(){
         Map map = new HashMap();map.put("开启进程","UDP-SERVER");
         System.out.println("开启UDP进程");
 
-        executeTask(udpTask);
+        executeTask(udpServerTask);
+
+        return map;
+    }
+
+    /**
+     * 开启Udp-CLIENT
+     * @return
+     */
+    @GetMapping("/onUdpClient")
+    public Object udpClientNetty(){
+        Map map = new HashMap();map.put("开启进程","UDP-CLIENT");
+        System.out.println("开启UDP-CLIENT进程");
+
+        executeTask(udpClientTask);
 
         return map;
     }

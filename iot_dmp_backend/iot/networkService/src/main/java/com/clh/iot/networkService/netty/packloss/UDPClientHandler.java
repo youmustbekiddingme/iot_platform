@@ -24,8 +24,10 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
         response=response+","+System.currentTimeMillis();   //01-1586228905993,1586228908030
         String key = response.substring(0,response.indexOf("-"));
         String value = response.substring(response.indexOf("-")+1,response.length());
+        String []val=value.split(",");
+        String value2= val[1]+","+val[2];
         Map map  =  new HashMap();
-        map.put(key,value);
+        map.put(key,value2);
         ClhUtils clhUtils = new ClhUtils();
         clhUtils.writeToProperties(Const.DEVICE_PATH,map);
         //channelHandlerContext.close();
