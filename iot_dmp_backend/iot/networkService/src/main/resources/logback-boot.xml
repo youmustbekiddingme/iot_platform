@@ -12,9 +12,25 @@
     </appender>
 
 
-    <appender name="networkService" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="tcplog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>log/networkService.%d.%i.log</fileNamePattern>
+            <fileNamePattern>log/networkService/tcp.%d.%i.log</fileNamePattern>
+            <!--<maxHistory>30</maxHistory>-->
+            <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>
+                %d %p (%file:%line\)- %m%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="udplog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/networkService/udp.%d.%i.log</fileNamePattern>
             <!--<maxHistory>30</maxHistory>-->
             <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
@@ -36,8 +52,12 @@
     </root>
 
 
-    <logger name="networkService" level="INFO">
-        <appender-ref ref="networkService" />
+    <logger name="tcplog" level="INFO">
+        <appender-ref ref="tcplog" />
+    </logger>
+
+    <logger name="udplog" level="INFO">
+        <appender-ref ref="udplog" />
     </logger>
 
 

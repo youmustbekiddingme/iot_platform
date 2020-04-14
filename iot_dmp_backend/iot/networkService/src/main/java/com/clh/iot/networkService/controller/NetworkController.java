@@ -1,5 +1,6 @@
 package com.clh.iot.networkService.controller;
 
+import com.clh.iot.networkService.task.TcpClientTask;
 import com.clh.iot.networkService.task.TcpServerTask;
 import com.clh.iot.networkService.task.UdpClientTask;
 import com.clh.iot.networkService.task.UdpServerTask;
@@ -20,6 +21,8 @@ public class NetworkController {
             LoggerFactory.getLogger("networkService");
     @Autowired
     private TcpServerTask tcpServerTaskTask;
+    @Autowired
+    private TcpClientTask tcpClientTask;
     @Autowired
     private UdpServerTask udpServerTask;
     @Autowired
@@ -53,11 +56,18 @@ public class NetworkController {
     @GetMapping("/onTcpServer")
     public Object tcpServerNetty(){
         Map map = new HashMap();map.put("开启进程","TCP-SERVER");
-        System.out.println("开启TCP进程");
+        System.out.println("开启TCP服务端进程");
         executeTask(tcpServerTaskTask);
         return map;
     }
 
+    @GetMapping("/onTcpClient")
+    public Object tcpClientNetty(){
+        Map map = new HashMap();map.put("开启进程","TCP-CLIENT");
+        System.out.println("开启TCP客户端进程");
+        executeTask(tcpClientTask);
+        return map;
+    }
     /**
      * 开启UDP-SERVER
      * @return

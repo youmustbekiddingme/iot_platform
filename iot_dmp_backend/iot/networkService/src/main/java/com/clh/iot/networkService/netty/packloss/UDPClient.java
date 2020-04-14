@@ -2,6 +2,7 @@ package com.clh.iot.networkService.netty.packloss;
 
 
 import com.clh.iot.networkService.config.Const;
+import com.clh.iot.networkService.netty.data.GenerateData;
 import com.clh.iot.networkService.util.ClhUtils;
 import com.google.gson.Gson;
 import io.netty.bootstrap.Bootstrap;
@@ -24,7 +25,7 @@ import java.util.Scanner;
 @Component
 public class UDPClient {
     private static final Logger logger =
-            LoggerFactory.getLogger("networkService");
+            LoggerFactory.getLogger("udplog");
     /**
      * 发送消息
      * @throws Exception
@@ -43,7 +44,7 @@ public class UDPClient {
             String deviceId=Const.deviceId;
             String key;
 
-            String playLoad=   preparePlayLoad(1000);
+            String playLoad= GenerateData.prepareUdpPlayLoad(1000);
 
             for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
                 key=deviceId+"_"+ nums;
@@ -62,8 +63,8 @@ public class UDPClient {
                     Thread.sleep(Const.UDP_HEART_BEAT);//200
                     Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
                     if(properties.get(key)!=null){
-                        logger.info("UDP-Client send-back success:"+key+":" +properties.get(key));
-                      //  System.out.println("UDP-Client send-back success:"+key+":" +properties.get(key));
+                      //  logger.info("UDP-Client send-back success:"+key+":" +properties.get(key));
+                        System.out.println("UDP-Client send-back success:"+key+":" +properties.get(key));
                         break;
                     }
                     if(System.currentTimeMillis()-startTime>Const.UDP_SEND_REC_DELAY_TIME){  //3000
@@ -173,7 +174,7 @@ public class UDPClient {
         mapRes.put("packSendAllNums",Const.UDP_PACKAGE_NUMS);
         mapRes.put("packSuccessNums",udpPackNums);
         mapRes.put("delayAllTime",delayTimeAll);
-        mapRes.put("delayAvgTime",udpPackNums);
+        mapRes.put("delayAvgTime",udpPackNums+"MS");
         mapRes.put("packLostRate",ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
         Gson gson = new Gson();
 
@@ -184,18 +185,7 @@ public class UDPClient {
     }
 
 
-    /**
-     * 准备playload
-     * @return
-     */
-    private String preparePlayLoad(int lenght){
-        StringBuilder   sb = new StringBuilder();
-        for(int i=0;i<1000;i++){
-            sb.append("A");
-        }
 
-        return sb.toString();
-    }
 }
 
 

@@ -40,7 +40,6 @@ public class ControlBusServer {
                         }
                     });
 
-            System.out.println("Echo 服务器启动");
             ChannelFuture channelFuture =  serverBootstrap.bind(Const.TCP_SERVER_PORT).sync();
             channelFuture.channel().closeFuture().sync();
 

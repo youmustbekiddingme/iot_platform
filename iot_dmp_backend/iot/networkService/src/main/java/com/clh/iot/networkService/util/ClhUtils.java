@@ -1,13 +1,13 @@
 package com.clh.iot.networkService.util;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Properties;
 
 public class ClhUtils {
     public static void main(String[] args) {
-      String xxx=  PercentNums(0.36);
-        System.out.println(xxx);
+        System.out.println(ClhUtils.remainDecimal(33733,2));
     }
 
         static{
@@ -174,5 +174,17 @@ public class ClhUtils {
         java.text.NumberFormat nf=java.text.NumberFormat.getPercentInstance();
         nf.setMinimumFractionDigits(2);
        return  nf.format(nums);
+    }
+
+    /**
+     * 保留小数位数
+     * @param num  待修正数字
+     * @param size  小数位数
+     * @return
+     */
+    public static double remainDecimal(double num,int size){
+        BigDecimal b = new BigDecimal(num);
+        Double result= b.setScale(size, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return result;
     }
 }

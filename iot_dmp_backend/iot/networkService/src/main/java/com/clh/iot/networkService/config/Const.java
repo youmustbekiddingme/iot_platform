@@ -6,6 +6,7 @@ public class Const {
     public static String TCP_SERVER_IP="192.168.0.59";//TCP服务端地址
     public static int TCP_SERVER_PORT=9999;//TCP端口号
    public static int TCP_CHANNEL_KEEP_TIME=5000;  //TCP链路保持时间
+    public static int TCP_PACK_SIZE=1; // 1M
 
     public static int UDP_SERVER_DELAY_TIME=0;  // UDPserver模拟延迟时间
     public static int UDP_HEART_BEAT=200;//UDP心跳检测

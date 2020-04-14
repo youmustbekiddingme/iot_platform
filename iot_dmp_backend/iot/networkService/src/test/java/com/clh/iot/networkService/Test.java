@@ -1,14 +1,13 @@
 package com.clh.iot.networkService;
 
 
+import java.math.BigDecimal;
 
 public class Test{
-    public static void main(String[] args) {
-        StringBuilder   sb = new StringBuilder();
-        for(int i=0;i<1000;i++){
-            sb.append("A");
-        }
-        System.out.println(sb.toString());
+    public static void main(String[] args)throws Exception {
+        String xxx= "!A077468&";
+        String yy=xxx.substring(1,xxx.length()-1);
+        System.out.println(yy);
     }
 
 }

@@ -23,7 +23,7 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
             Thread.sleep(Const.UDP_SERVER_DELAY_TIME);
             String responseStr = new String(array,"ascii");
 
-            System.out.println("UDP-Server recevice And sendBack:["+responseStr+"]");
+           // System.out.println("UDP-Server recevice And sendBack:["+responseStr+"]");
 
             ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(responseStr, CharsetUtil.US_ASCII), packet.sender()));
 

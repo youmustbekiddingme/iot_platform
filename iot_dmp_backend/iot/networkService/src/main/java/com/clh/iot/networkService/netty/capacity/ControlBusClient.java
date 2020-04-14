@@ -8,11 +8,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 
+@Component
 public class ControlBusClient {
-
 
     public void start() throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
