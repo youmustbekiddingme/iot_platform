@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>IOT物联网平台</h2>
+    <h2>高菲物联网平台</h2>
     <form method="post" id="formId">
       <div class="form-input">
         <el-input v-model="username" placeholder="用户名" required="required" ></el-input>
