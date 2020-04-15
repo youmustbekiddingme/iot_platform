@@ -1,8 +1,14 @@
 package com.clh.iot.networkService.config;
 
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+
 public class Const {
-    public static String DEVICE_PATH="device.properties"; //设备文件time
+
+    public static String DEVICE_PATH;//设备文件time
     public static String TCP_SERVER_IP="192.168.0.59";//TCP服务端地址
     public static int TCP_SERVER_PORT=9999;//TCP端口号
    public static int TCP_CHANNEL_KEEP_TIME=5000;  //TCP链路保持时间
@@ -16,5 +22,13 @@ public class Const {
     public static String UDP_SERVER_IP="192.168.0.59";//UDP服务端地址
     public static String deviceId="A077468";
 
+    static {
+        Resource resource = new ClassPathResource("device.properties");
+        try {
+            DEVICE_PATH=resource.getFile().getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
