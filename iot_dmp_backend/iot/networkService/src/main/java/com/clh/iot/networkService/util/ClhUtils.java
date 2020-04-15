@@ -1,5 +1,7 @@
 package com.clh.iot.networkService.util;
 
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -21,9 +23,13 @@ public class ClhUtils {
     public  Properties loadProperties(String filename){
         InputStream inputStream ;
         try {
+            //resource 目录下的资源必须以这种方式进行读取。打包编译后在classpath目录下
+            ClassPathResource resource = new ClassPathResource(filename);
 
-            inputStream =  new FileInputStream(filename);
-        } catch (FileNotFoundException e) {
+            //springboot 通过文件获取输入流不行
+//            inputStream =  new FileInputStream(filename);
+            inputStream=resource.getInputStream();
+        } catch (IOException e) {
             return null;
         }
         Properties properties = new Properties();
@@ -49,7 +55,9 @@ public class ClhUtils {
         Properties properties= loadProperties(filename);
         FileOutputStream fos=null;
         try {
-             fos = new FileOutputStream(filename,false); //默认是false ，表示获取流文件会重新覆盖之前的，true表示追加。
+            ClassPathResource resource = new ClassPathResource(filename);
+            String filePath= resource.getClassLoader().getResource("device.properties").getPath();
+             fos = new FileOutputStream(filePath,false); //默认是false ，表示获取流文件会重新覆盖之前的，true表示追加。
             //读取原来配置文件的数据加载到内存
             OutputStreamWriter opw = new OutputStreamWriter(fos,"utf-8");
             //新增的数据
@@ -81,7 +89,9 @@ public class ClhUtils {
         Properties properties= loadProperties(filename);
         FileOutputStream fos=null;
         try {
-            fos = new FileOutputStream(filename,false);
+            ClassPathResource resource = new ClassPathResource(filename);
+            String filePath= resource.getClassLoader().getResource("device.properties").getPath();
+            fos = new FileOutputStream(filePath,false);
             OutputStreamWriter opw = new OutputStreamWriter(fos,"utf-8");
             properties.clear();
             properties.store(opw,"write data");
