@@ -30,7 +30,7 @@ public class UDPClient {
      * 发送消息
      * @throws Exception
      */
-    public   void sendMessage()throws Exception{
+    public   void sendMessage(){
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
@@ -40,49 +40,14 @@ public class UDPClient {
 
             ChannelFuture cf = bootstrap.connect();
 
-            ClhUtils clhUtils= new ClhUtils();
-            String deviceId=Const.deviceId;
-            String key;
-
-            String playLoad= GenerateData.prepareUdpPlayLoad(1000);
-
-            for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
-                key=deviceId+"_"+ nums;
-                Long startTime = System.currentTimeMillis();
-                String message=key+"-"+playLoad+","+startTime;  //01-1586228905993
-                cf.channel().writeAndFlush(
-                        new DatagramPacket(
-                                Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
-                                new InetSocketAddress(
-                                        Const.UDP_SERVER_IP,Const.UDP_SERVER_PORT
-                                ))
-                );
-
-
-                while(true){
-                    Thread.sleep(Const.UDP_HEART_BEAT);//200
-                    Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
-                    if(properties.get(key)!=null){
-                      //  logger.info("UDP-Client send-back success:"+key+":" +properties.get(key));
-                        System.out.println("UDP-Client send-back success:"+key+":" +properties.get(key));
-                        break;
-                    }
-                    if(System.currentTimeMillis()-startTime>Const.UDP_SEND_REC_DELAY_TIME){  //3000
-                        System.out.println("UDP-Client send-back failed:"+key);
-                        break;
-                    }
-
-                }
-
-                if(nums==Const.UDP_PACKAGE_NUMS){
-                    calUdpResult();
-                }
-            }
-
+            testNetwork(cf);
 
             //阻塞保持链路，除非主动关闭
-            cf.channel().closeFuture().sync();
-
+            try {
+                cf.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
         }
@@ -90,6 +55,122 @@ public class UDPClient {
             group.shutdownGracefully();
         }
     }
+
+    /**
+     * 测试网络
+     * @param cf
+     */
+    private void testNetwork(ChannelFuture cf){
+        ClhUtils clhUtils= new ClhUtils();
+        String deviceId=Const.deviceId+"_";
+        String key;
+        String type="1_";
+        String playLoad= GenerateData.prepareUdpPlayLoad(1000);
+
+        for(int nums=1;nums<=Const.UDP_PACKAGE_NUMS;nums++){
+            key=type+ deviceId+ nums;
+            Long startTime = System.currentTimeMillis();
+            String message=key+"-"+playLoad+","+startTime;  //1_A077468_1-1586228905993
+            cf.channel().writeAndFlush(
+                    new DatagramPacket(
+                            Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII),
+                            new InetSocketAddress(
+                                    Const.UDP_SERVER_IP,Const.UDP_SERVER_PORT
+                            ))
+            );
+
+
+            while(true){
+                try {
+                    Thread.sleep(Const.UDP_HEART_BEAT);//200
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
+                if(properties.get(key)!=null){
+                    //  logger.info("UDP-Client send-back success:"+key+":" +properties.get(key));
+                    System.out.println("UDP-Client send-back success:"+key+":" +properties.get(key));
+                    break;
+                }
+                if(System.currentTimeMillis()-startTime>Const.UDP_SEND_REC_DELAY_TIME){  //3000
+                    System.out.println("UDP-Client send-back failed:"+key);
+                    break;
+                }
+
+            }
+
+            if(nums==Const.UDP_PACKAGE_NUMS){
+                calUdpResult(cf);
+            }
+        }
+
+    }
+
+
+
+    /**
+     * 统计结果
+     */
+    private void calUdpResult(ChannelFuture cf){
+        ClhUtils clhUtils  = new ClhUtils();
+        Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
+        int udpPackNums=  properties.size();
+        //  Map delayTimeMap = new HashMap();
+        double delayTimeAll=0;
+        for (String key : properties.stringPropertyNames()) {
+            String val= properties.getProperty(key);
+            String times[]=val.split(",");
+            Long time1=Long.valueOf(times[0]);
+            Long time2=Long.valueOf(times[1]);
+            Long delayTimeOne=time2-time1;
+            delayTimeAll=delayTimeAll+delayTimeOne;
+        }
+        double size = properties.size();
+        System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
+        System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
+        System.out.println("总时延："+ delayTimeAll+"ms");
+        System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
+        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
+
+
+        Map mapRes = new HashMap();
+        mapRes.put("from","UDP-CLIENT");
+        mapRes.put("packSendAllNums",Const.UDP_PACKAGE_NUMS);
+        mapRes.put("packSuccessNums",udpPackNums);
+        mapRes.put("delayAllTime",delayTimeAll+"ms");
+        mapRes.put("delayAvgTime",udpPackNums+"ms");
+        mapRes.put("packLostRate",ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
+
+        Gson gson = new Gson();
+
+        String strRes = gson.toJson(mapRes);
+        strRes="2_"+strRes;
+        //记录本地camera日志
+        logger.info(strRes.substring(2,strRes.length()));
+
+        //清空device文件
+       clhUtils.clearProperties(Const.DEVICE_PATH);
+
+       //上传结果到服务器
+        uploadRes(cf,strRes);
+    }
+
+    /**
+     * 上传结果
+     * @param cf
+     */
+    private void uploadRes(ChannelFuture cf,String str){
+        cf.channel().writeAndFlush(
+                new DatagramPacket(
+                        Unpooled.copiedBuffer(str, CharsetUtil.US_ASCII),
+                        new InetSocketAddress(
+                                Const.UDP_SERVER_IP,Const.UDP_SERVER_PORT
+                        ))
+        );
+    }
+
+
+
 
 
     public static void main(String[] args) throws Exception{
@@ -140,52 +221,6 @@ public class UDPClient {
 
 
     }
-
-    /**
-     * 统计结果
-     */
-    private void calUdpResult(){
-        ClhUtils clhUtils  = new ClhUtils();
-        Properties properties = clhUtils.loadProperties(Const.DEVICE_PATH);
-        int udpPackNums=  properties.size();
-        //  Map delayTimeMap = new HashMap();
-        double delayTimeAll=0;
-        for (String key : properties.stringPropertyNames()) {
-            String val= properties.getProperty(key);
-            String times[]=val.split(",");
-            Long time1=Long.valueOf(times[0]);
-            Long time2=Long.valueOf(times[1]);
-            Long delayTimeOne=time2-time1;
-            delayTimeAll=delayTimeAll+delayTimeOne;
-        }
-        double size = properties.size();
-        System.out.println("UDP总共发送报文次数："+ Const.UDP_PACKAGE_NUMS+"次");
-        System.out.println("UDP成功发送报文次数："+ properties.size()+"次");
-        System.out.println("总时延："+ delayTimeAll+"ms");
-        System.out.println("平均时延"+delayTimeAll/udpPackNums+"ms");
-        System.out.println("丢包率："+ ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
-//        packSendAllNums: UDP总报文数
-//        packSuccessNums: UDP成功报文数
-//        delayAllTime: 总时延
-//        delayAvgTime: 平均时延
-//        packLostRate: 丢包率
-
-        Map mapRes = new HashMap();
-        mapRes.put("packSendAllNums",Const.UDP_PACKAGE_NUMS);
-        mapRes.put("packSuccessNums",udpPackNums);
-        mapRes.put("delayAllTime",delayTimeAll);
-        mapRes.put("delayAvgTime",udpPackNums+"MS");
-        mapRes.put("packLostRate",ClhUtils.PercentNums  (1-size/Const.UDP_PACKAGE_NUMS));
-        Gson gson = new Gson();
-
-        logger.info(gson.toJson(mapRes));
-
-        //清空device文件
-       clhUtils.clearProperties(Const.DEVICE_PATH);
-    }
-
-
-
 }
 
 

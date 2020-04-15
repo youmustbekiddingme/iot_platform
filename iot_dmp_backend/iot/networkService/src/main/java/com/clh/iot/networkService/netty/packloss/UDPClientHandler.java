@@ -21,7 +21,7 @@ public class UDPClientHandler extends SimpleChannelInboundHandler<DatagramPacket
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) throws Exception {
         String response = datagramPacket.content().toString(CharsetUtil.US_ASCII);
-        response=response+","+System.currentTimeMillis();   //01-1586228905993,1586228908030
+        response=response+","+System.currentTimeMillis();   //1_A077468_1-1586228905993,1586228908030
         String key = response.substring(0,response.indexOf("-"));
         String value = response.substring(response.indexOf("-")+1,response.length());
         String []val=value.split(",");
