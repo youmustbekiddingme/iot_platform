@@ -31,6 +31,7 @@ public class UDPServerHandler extends SimpleChannelInboundHandler<DatagramPacket
                 ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(responseStr, CharsetUtil.US_ASCII), packet.sender()));
             }else if(type.equals("2")){
                 //2 本地记录日志
+
                 logger.info(responseStr.substring(2,responseStr.length()));
             }
 

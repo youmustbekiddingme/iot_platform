@@ -143,16 +143,19 @@ public class UDPClient {
 
         Gson gson = new Gson();
 
-        String strRes = gson.toJson(mapRes);
-        strRes="2_"+strRes;
+        String strRes1 = gson.toJson(mapRes);
+        strRes1="2_"+strRes1;
         //记录本地camera日志
-        logger.info(strRes.substring(2,strRes.length()));
+        logger.info(strRes1.substring(2,strRes1.length()));
 
         //清空device文件
        clhUtils.clearProperties(Const.DEVICE_PATH);
 
+       mapRes.put("from","UDP-SERVER");
+       String strRes2=gson.toJson(mapRes);
+       strRes2="2_"+strRes2;
        //上传结果到服务器
-        uploadRes(cf,strRes);
+        uploadRes(cf,strRes2);
     }
 
     /**
