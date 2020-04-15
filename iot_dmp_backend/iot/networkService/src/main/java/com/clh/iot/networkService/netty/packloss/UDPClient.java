@@ -149,7 +149,7 @@ public class UDPClient {
         logger.info(strRes1.substring(2,strRes1.length()));
 
         //清空device文件
-     //  clhUtils.clearProperties(Const.DEVICE_PATH);
+      clhUtils.clearProperties(Const.DEVICE_PATH);
 
        mapRes.put("from","UDP-SERVER");
        String strRes2=gson.toJson(mapRes);
