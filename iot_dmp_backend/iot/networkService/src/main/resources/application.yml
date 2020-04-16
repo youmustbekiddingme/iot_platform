@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+spring:
+  profiles:
+    active: #spring.profiles.active#
+
 #参数配置
 params:
   devicePath: device.properties
@@ -17,5 +21,10 @@ params:
 
 #日志配置
 logging:
-  file: networkService.log
   config: classpath:logback-boot.xml
+
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: com.clh.iot.networkService.pojo
+  configuration:
+    map-underscore-to-camel-case: true
