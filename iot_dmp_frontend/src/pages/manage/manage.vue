@@ -52,18 +52,8 @@
                 高菲物联后台管理系统
           </el-header>
 
-          <!--点击按钮切换。。。。-->
-          <!--<el-main>-->
-            <!--<el-table :data="tableData">-->
-              <!--<el-table-column prop="date" label="日期" width="140">-->
-              <!--</el-table-column>-->
-              <!--<el-table-column prop="name" label="姓名" width="120">-->
-              <!--</el-table-column>-->
-              <!--<el-table-column prop="address" label="地址">-->
-              <!--</el-table-column>-->
-            <!--</el-table>-->
-          <!--</el-main>-->
-          <el-main>
+
+          <el-main  v-show="isShowUser" >
             <el-table :data="tableData">
               <el-table-column prop="date" label="日期" width="140">
               </el-table-column>
@@ -72,6 +62,33 @@
               <el-table-column prop="address" label="地址">
               </el-table-column>
             </el-table>
+          </el-main>
+
+          <el-main class="main-button" v-show="isShowNetwork">
+            <el-button type="primary" >开启TCP-SERVER</el-button>
+            <el-button type="primary" >开启TCP-CLIENT</el-button>
+            <el-button type="success" >开启UDP-SERVER</el-button>
+            <el-button type="success" >开启UDP-CLIENT</el-button>
+            <br>
+            <br>
+            <el-button type="danger" >关闭TCP-SERVER</el-button>
+            <el-button type="danger" >关闭TCP-CLIENT</el-button>
+            <el-button type="danger" >关闭UDP-SERVER</el-button>
+            <el-button type="danger" >关闭UDP-CLIENT</el-button>
+
+          </el-main>
+
+
+          <el-main  v-show="isShowCom" >
+            串口烧录
+          </el-main>
+
+          <el-main  v-show="isShowDevice" >
+            设备管理
+          </el-main>
+
+          <el-main  v-show="isShowGis" >
+            Gis管理
           </el-main>
 
         </el-container>
@@ -94,25 +111,50 @@
         settingUrl:require("../../assets/imgs/设置.png"),
         deviceUrl:require("../../assets/imgs/设备.png"),
         gisUrl:require("../../assets/imgs/GIS应用.png"),
-        tableData: Array(20).fill(item)
+        tableData: Array(20).fill(item),
+        isShowUser:false,
+        isShowNetwork:false,
+        isShowCom:false,
+        isShowDevice:false,
+        isShowGis:false
       }
     },
     methods:{
       userClick(){
-        alert("userClick")
+        this.isShowUser=true;
+        this.isShowNetwork=false;
+        this.isShowCom=false;
+        this.isShowDevice=false;
+        this.isShowGis=false;
       },
       netClick(){
-        alert("netClick")
-
+        this.isShowUser=false;
+        this.isShowNetwork=true;
+        this.isShowCom=false;
+        this.isShowDevice=false;
       },
       burnClick(){
-        alert("burnClick")
+        this.isShowUser=false;
+        this.isShowNetwork=false;
+        this.isShowCom=true;
+        this.isShowDevice=false;
+        this.isShowGis=false;
+
       },
       deviceClick(){
-        alert("deviceClick")
+        this.isShowUser=false;
+        this.isShowNetwork=false;
+        this.isShowCom=false;
+        this.isShowDevice=true;
+        this.isShowGis=false;
+
       },
       gisClick(){
-        alert("gisClick")
+        this.isShowUser=false;
+        this.isShowNetwork=false;
+        this.isShowCom=false;
+        this.isShowDevice=false;
+        this.isShowGis=true;
       }
 
     }
@@ -132,5 +174,8 @@
   .elImg{
     width:15px;
     height:15px;
+  }
+  .main-button{
+    padding: 20px;  /*不起作用？？？？？？？？？？？？？？*/
   }
 </style>
