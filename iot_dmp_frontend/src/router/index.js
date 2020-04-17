@@ -17,15 +17,39 @@ export default new Router({
       name: 'register',
       component: (resolve) => require(['@/pages/index/register'], resolve)
     },
-    {
-      path: '/manage',
-      name: 'manage',
-      component: (resolve) => require(['@/pages/manage/manage'], resolve)
-    },
+
     {
       path: '/dialog',
       name: 'dialog',
       component: (resolve) => require(['@/components/dialog'], resolve)
+    },
+    {
+      path: '/manage',
+      name: 'manage',
+      component: (resolve) => require(['@/pages/manage/manage'], resolve),
+      redirect:'/user',
+      children:[
+        {
+          path: '/user',
+          name: 'user',
+          component: (resolve) => require(['@/pages/manage/user/user'], resolve),
+        },
+        {
+          path: '/device',
+          name: 'device',
+          component: (resolve) => require(['@/pages/manage/device/device'], resolve),
+        },
+        {
+          path: '/network',
+          name: 'network',
+          component: (resolve) => require(['@/pages/manage/network/network'], resolve),
+        },
+        {
+          path: '/burn',
+          name: 'burn',
+          component: (resolve) => require(['@/pages/manage/burn/burn'], resolve),
+        }
+      ]
     }
 
   ]

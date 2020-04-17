@@ -46,7 +46,7 @@
           var result = res.data.result;
 
             if(result==1){
-              this.$router.push({path:'/manage'}); //路由跳转到device页面
+              this.$router.push({path:'/manage'}); //路由跳转到manage管理页面
 
 
             }else if(result==2){
