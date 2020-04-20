@@ -56,21 +56,9 @@
 </template>
 
 <script>
-
     export default {
-
         name: "user_vue",
         data(){
-          // const item = {
-          //   realname: '王小虎',
-          //   nickname:'laowang',
-          //   phone:'18320966643',
-          //   email:'545018520@qq.com',
-          //   regtime: '2016-05-02',
-          //   address: '上海市普陀区金沙江路 1518 弄',
-          //   isonline:'在线'
-          // };
-
           return{
             total:0,
             // tableData: Array(10).fill(item),
@@ -80,23 +68,25 @@
             regTimeInput:'',
             addressInput:'',
             pageSize:"10",
-            pageNum:"1",
-            paramData:{}
+            pageNum:"1"
           }
         },
       methods:{
+          //获取查询的公共参数
+          getParamData(){
+            var data={
+              nickname:this.nicknameInput,
+              phone:this.phoneInput,
+              regTime:this.regTimeInput,
+              address:this.addressInput,
+              pageNum:this.pageNum,
+              pageSize:this.pageSize
+            }
+            return data;
+          },
           searchClick(){
-              var data={
-                nickname:this.nicknameInput,
-                phone:this.phoneInput,
-                regTime:this.regTimeInput,
-                address:this.addressInput,
-                pageNum:this.pageNum,
-                pageSize:this.pageSize
-              }
-
               //单机模糊查询多个
-              this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+              this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(this.getParamData())}).then(res=>{
                       var result= res.data
                       this.tableData=result.list
               })
@@ -105,17 +95,9 @@
         handlePageSizeChange(val){
             //将val转为string ，不然传递给后端就是double类型了
            this.pageSize= val.toString()
-          var data={
-            nickname:this.nicknameInput,
-            phone:this.phoneInput,
-            regTime:this.regTimeInput,
-            address:this.addressInput,
-            pageNum:this.pageNum,
-            pageSize:this.pageSize
-          }
 
           //单机模糊查询多个
-          this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+          this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(this.getParamData())}).then(res=>{
             var result= res.data
             this.tableData=result.list
           })
@@ -123,17 +105,8 @@
         //页码数
         handlePageNumChange(val){
             this.pageNum=val.toString()
-          var data={
-            nickname:this.nicknameInput,
-            phone:this.phoneInput,
-            regTime:this.regTimeInput,
-            address:this.addressInput,
-            pageNum:this.pageNum,
-            pageSize:this.pageSize
-          }
-
           //单机模糊查询多个
-          this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+          this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(this.getParamData())}).then(res=>{
             var result= res.data
             this.tableData=result.list
           })
@@ -153,10 +126,7 @@
             })
       },
       mounted:function () {
-        this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
-          var result= res.data
-          this.tableData=result.list
-        })
+
       }
     }
 </script>
