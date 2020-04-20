@@ -41,7 +41,7 @@
             password :this.password
         }
         this.$axios.post("http://localhost:8080/login",{        //url 提取出来作为变量，并根据三大环境动态切换？
-          body:JSON.stringify(data)   //传递json数据到后台
+          body:window.JSON.stringify(data)   //传递json数据到后台
         }).then(res=>{
           var result = res.data.result;
 

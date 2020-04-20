@@ -1,0 +1,13 @@
+1.数据源监控
+http://localhost:8080/druid/index.html
+
+2.前端接收数据形式
+ var result= res.data
+ result= {
+     "code": 1,
+     "msg": "查询总记录数",
+     "list": [
+         0
+     ]
+ }
+ code:命令码 ，msg:说明，list 结果集

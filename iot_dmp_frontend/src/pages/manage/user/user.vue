@@ -6,13 +6,13 @@
         昵称 <el-input v-model="nicknameInput" ></el-input>
       </div>
       <div>
-        手机 <el-input v-model="nicknameInput" ></el-input>
+        手机 <el-input v-model="phoneInput" ></el-input>
       </div>
       <div>
-        注册时间 <el-input v-model="nicknameInput" ></el-input>
+        注册时间 <el-input v-model="regTimeInput" ></el-input>
       </div>
       <div>
-        地址 <el-input v-model="nicknameInput" ></el-input>
+        地址 <el-input v-model="addressInput" ></el-input>
       </div>
     </div>
 
@@ -31,9 +31,9 @@
       </el-table-column>
       <el-table-column prop="email" label="邮箱" width="250">
       </el-table-column>
-      <el-table-column prop="regTime" label="注册时间" width="140">
+      <el-table-column prop="regtime" label="注册时间" width="140">
       </el-table-column>
-      <el-table-column prop="isOnline" label="在线状态" width="100">
+      <el-table-column prop="isonline" label="在线状态" width="100">
       </el-table-column>
       <el-table-column prop="address" label="地址" width="500">
       </el-table-column>
@@ -44,8 +44,8 @@
   <el-footer>
     <div class="block">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @size-change="handlePageSizeChange"
+        @current-change="handlePageNumChange"
         :page-sizes="[10, 20, 30, 40]"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
@@ -56,32 +56,88 @@
 </template>
 
 <script>
+
     export default {
+
         name: "user_vue",
         data(){
-          const item = {
-            realname: '王小虎',
-            nickname:'laowang',
-            phone:'18320966643',
-            email:'545018520@qq.com',
-            regTime: '2016-05-02',
-            address: '上海市普陀区金沙江路 1518 弄',
-            isOnline:'在线'
-          };
+          // const item = {
+          //   realname: '王小虎',
+          //   nickname:'laowang',
+          //   phone:'18320966643',
+          //   email:'545018520@qq.com',
+          //   regtime: '2016-05-02',
+          //   address: '上海市普陀区金沙江路 1518 弄',
+          //   isonline:'在线'
+          // };
 
           return{
             total:0,
-            tableData: Array(10).fill(item),
-            nicknameInput:''
+            // tableData: Array(10).fill(item),
+            tableData:[],
+            nicknameInput:'',
+            phoneInput:'',
+            regTimeInput:'',
+            addressInput:'',
+            pageSize:"10",
+            pageNum:"1",
+            paramData:{}
           }
         },
       methods:{
           searchClick(){
-            alert("xxxxx")
+              var data={
+                nickname:this.nicknameInput,
+                phone:this.phoneInput,
+                regTime:this.regTimeInput,
+                address:this.addressInput,
+                pageNum:this.pageNum,
+                pageSize:this.pageSize
+              }
+
+              //单机模糊查询多个
+              this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+                      var result= res.data
+                      this.tableData=result.list
+              })
           },
-        handleSizeChange(){
+        //每页显示多少条
+        handlePageSizeChange(val){
+            //将val转为string ，不然传递给后端就是double类型了
+           this.pageSize= val.toString()
+          var data={
+            nickname:this.nicknameInput,
+            phone:this.phoneInput,
+            regTime:this.regTimeInput,
+            address:this.addressInput,
+            pageNum:this.pageNum,
+            pageSize:this.pageSize
+          }
+
+          //单机模糊查询多个
+          this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+            var result= res.data
+            this.tableData=result.list
+          })
         },
-        handleCurrentChange(){},
+        //页码数
+        handlePageNumChange(val){
+            this.pageNum=val.toString()
+          var data={
+            nickname:this.nicknameInput,
+            phone:this.phoneInput,
+            regTime:this.regTimeInput,
+            address:this.addressInput,
+            pageNum:this.pageNum,
+            pageSize:this.pageSize
+          }
+
+          //单机模糊查询多个
+          this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+            var result= res.data
+            this.tableData=result.list
+          })
+        },
 
       },
       //创建vue实例前，查询总记录数
@@ -94,8 +150,13 @@
             if(result.code==1){
               this.total=result.list[0]
             }
-            }
-          )
+            })
+      },
+      mounted:function () {
+        this.$axios.post("http://localhost:8080/user/many",{body:window.JSON.stringify(data)}).then(res=>{
+          var result= res.data
+          this.tableData=result.list
+        })
       }
     }
 </script>
