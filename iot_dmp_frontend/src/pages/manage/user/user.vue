@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <el-button type="primary">搜索</el-button>
+    <el-button type="primary" @click="searchClick">搜索</el-button>
     <el-button type="danger">重置</el-button>
 
   </el-header>
@@ -46,10 +46,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
         :page-sizes="[10, 20, 30, 40]"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="100">
+        :total="total">
       </el-pagination>
     </div>
   </el-footer>
@@ -58,7 +57,7 @@
 
 <script>
     export default {
-        name: "user.vue",
+        name: "user_vue",
         data(){
           const item = {
             realname: '王小虎',
@@ -71,10 +70,33 @@
           };
 
           return{
+            total:0,
             tableData: Array(10).fill(item),
             nicknameInput:''
           }
-        }
+        },
+      methods:{
+          searchClick(){
+            alert("xxxxx")
+          },
+        handleSizeChange(){
+        },
+        handleCurrentChange(){},
+
+      },
+      //创建vue实例前，查询总记录数
+      created:function(){
+          var data={}
+          this.$axios.post("http://localhost:8080/user/count",{
+            body: window.JSON.stringify(data)
+          }).then(res=>{
+            var result = res.data
+            if(result.code==1){
+              this.total=result.list[0]
+            }
+            }
+          )
+      }
     }
 </script>
 
