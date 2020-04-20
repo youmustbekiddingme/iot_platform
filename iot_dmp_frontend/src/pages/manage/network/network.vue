@@ -18,7 +18,7 @@
 
 <script>
     export default {
-        name: "network"
+        name: "network_vue"
     }
 </script>
 

@@ -6,7 +6,7 @@
 
 <script>
     export default {
-        name: "burn"
+        name: "burn_vue"
     }
 </script>
 
