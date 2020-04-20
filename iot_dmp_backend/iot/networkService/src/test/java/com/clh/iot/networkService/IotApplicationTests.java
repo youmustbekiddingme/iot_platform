@@ -23,6 +23,11 @@ public class IotApplicationTests {
             tUser.setUserName("caolihua"+i);
             userMapper.insert(tUser);
         }
-    }
 
+
+    }
+    @Test
+    public void test1(){
+
+    }
 }

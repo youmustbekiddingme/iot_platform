@@ -15,8 +15,8 @@ spring:
       # 配置获取连接等待超时的时间
       # 下面为连接池的补充设置，应用到上面所有数据源中
       # 初始化大小，最小，最大
-      initialSize: 1
-      minIdle: 3
+      initialSize: 10
+      minIdle: 5
       maxActive: 20
       # 配置获取连接等待超时的时间
       maxWait: 60000
@@ -56,6 +56,8 @@ params:
 #日志配置
 logging:
   config: classpath:logback-boot.xml
+  level:
+    com.clh.iot.networkService.dao: debug
 
 mybatis:
   #映射文件*.xml的位置
@@ -67,3 +69,9 @@ mybatis:
    #开启驼峰映射
   configuration:
     map-underscore-to-camel-case: true
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

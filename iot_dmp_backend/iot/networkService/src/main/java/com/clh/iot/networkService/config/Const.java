@@ -1,11 +1,4 @@
 package com.clh.iot.networkService.config;
-
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-
 public class Const {
 
     public static String DEVICE_PATH="device.properties";
