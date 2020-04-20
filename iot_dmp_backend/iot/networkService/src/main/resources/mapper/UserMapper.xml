@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.clh.iot.networkService.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.clh.iot.networkService.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="regTime" property="regtime" jdbcType="TIMESTAMP" />
+    <result column="isOnline" property="isonline" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, realname, nickname, phone, email, regTime, isOnline, address
+  </sql>
+  <!--模糊查询多个-->
+  <select id="selectManyTusers" resultMap="BaseResultMap">
+    select * from user where 1=1
+    <if test="userName!=null and userName!='' ">
+      and user_name like '%${userName}%'
+    </if>
+  </select>
+
+  <!--查询总数-->
+  <select id="selectCounts" resultType="java.lang.Integer">
+    select count(1) from user
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.clh.iot.networkService.pojo.User" >
+    insert into user (id, realname, nickname, 
+      phone, email, regTime, 
+      isOnline, address)
+    values (#{id,jdbcType=INTEGER}, #{realname,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{regtime,jdbcType=TIMESTAMP}, 
+      #{isonline,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.clh.iot.networkService.pojo.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="realname != null" >
+        realname,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="regtime != null" >
+        regTime,
+      </if>
+      <if test="isonline != null" >
+        isOnline,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="realname != null" >
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="regtime != null" >
+        #{regtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isonline != null" >
+        #{isonline,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.clh.iot.networkService.pojo.User" >
+    update user
+    <set >
+      <if test="realname != null" >
+        realname = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="regtime != null" >
+        regTime = #{regtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isonline != null" >
+        isOnline = #{isonline,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.clh.iot.networkService.pojo.User" >
+    update user
+    set realname = #{realname,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      regTime = #{regtime,jdbcType=TIMESTAMP},
+      isOnline = #{isonline,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
