@@ -1,7 +1,5 @@
 package com.clh.iot.networkService.util;
 
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -9,8 +7,6 @@ import java.util.Properties;
 
 public class ClhUtils {
     public static void main(String[] args) {
-
-
 
     }
 
