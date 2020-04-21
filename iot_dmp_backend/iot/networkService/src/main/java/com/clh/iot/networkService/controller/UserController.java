@@ -55,6 +55,9 @@ public class UserController {
     }
     @RequestMapping("/deleteOne")
     public ResultBase deleteUserOne(@RequestBody String body){
-        return null;
+        Map<String,String>bodyMap = ParamBody.getBodyMap(body);
+        String id = bodyMap.get("id");
+        int result=   userMapper.deleteByPrimaryKey(Integer.parseInt(id));
+        return ResultBase.success(1,"删除成功");
     }
 }
