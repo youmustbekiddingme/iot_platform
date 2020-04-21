@@ -1,4 +1,5 @@
 package com.clh.iot.networkService.controller;
+import com.clh.iot.common.util.ParamBody;
 import com.clh.iot.common.util.ResultBase;
 import com.clh.iot.networkService.dao.UserMapper;
 import com.clh.iot.networkService.pojo.User;
@@ -7,6 +8,7 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,14 +31,12 @@ public class UserController {
      * @param body
      * @return
      */
-    @RequestMapping("/many")
+    @RequestMapping("/searchMany")
     public ResultBase getManyUsers(@RequestBody String body){
-        Gson gson = new Gson();
-        Map mapP =gson.fromJson(body,Map.class);
-        Map<String,String>  bodyMap =(Map) mapP.get("body");
+        Map<String,String>bodyMap = ParamBody.getBodyMap(body);
         //报错，缺少必传参数
-        int pageNum = Integer.parseInt(bodyMap.get("pageNum"));
-        int pageSize=Integer.parseInt(bodyMap.get("pageSize"));
+        int pageNum = Integer.parseInt(bodyMap.get("pageNum"));//页码
+        int pageSize=Integer.parseInt(bodyMap.get("pageSize"));//页面大小
         PageHelper.startPage(pageNum  , pageSize);
         List<User> list = userMapper.selectManyTusers(bodyMap);
         return ResultBase.success(1,"模糊查询多个user",list);
@@ -53,5 +53,8 @@ public class UserController {
         list.add(counts);
         return ResultBase.success(1,"查询总记录数",list);
     }
-
+    @RequestMapping("/deleteOne")
+    public ResultBase deleteUserOne(@RequestBody String body){
+        return null;
+    }
 }

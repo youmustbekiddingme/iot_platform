@@ -9,7 +9,8 @@
 		<module>common</module>
 		<module>eureka</module>
         <module>gateway</module>
-    </modules>
+		<module>generator</module>
+	</modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -35,12 +36,18 @@
 	<dependencyManagement>
 		<dependencies>
 
+
+			<!--<dependency>-->
+				<!--<groupId>org.springframework.cloud</groupId>-->
+				<!--<artifactId>spring-cloud-dependencies</artifactId>-->
+				<!--<version>${springcloud.version}</version>-->
+				<!--<type>pom</type>-->
+				<!--<scope>import</scope>-->
+			<!--</dependency>-->
 			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${springcloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<groupId>com.clh</groupId>
+				<artifactId>common</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
@@ -48,9 +55,11 @@
 				<artifactId>netty-all</artifactId>
 				<version>${netty.version}</version>
 			</dependency>
-
-
-
+			<dependency>
+				<groupId>com.github.pagehelper</groupId>
+				<artifactId>pagehelper-spring-boot-starter</artifactId>
+				<version>1.2.5</version>
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -63,46 +72,67 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<!--这个参数需要application.yml动态获取-->
-				<spring.profiles.active>dev</spring.profiles.active>
-				<repackage.location>C:\Users\沈涛\Desktop\package</repackage.location>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<!--这个参数需要application.yml动态获取-->
-				<spring.profiles.active>prod</spring.profiles.active>
-				<repackage.location>/home/clh</repackage.location>
-			</properties>
-		</profile>
-	</profiles>
+	<!--<profiles>-->
+		<!--<profile>-->
+			<!--<id>dev</id>-->
+			<!--<properties>-->
+				<!--&lt;!&ndash;这个参数需要application.yml动态获取&ndash;&gt;-->
+				<!--<spring.profiles.active>dev</spring.profiles.active>-->
+				<!--<repackage.location>C:\Users\沈涛\Desktop\package</repackage.location>-->
+			<!--</properties>-->
+		<!--</profile>-->
+		<!--<profile>-->
+			<!--<id>prod</id>-->
+			<!--<properties>-->
+				<!--&lt;!&ndash;这个参数需要application.yml动态获取&ndash;&gt;-->
+				<!--<spring.profiles.active>prod</spring.profiles.active>-->
+				<!--<repackage.location>/home/clh</repackage.location>-->
+			<!--</properties>-->
+		<!--</profile>-->
+	<!--</profiles>-->
 
 
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.yml</include>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.yml</include>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
 					<version>${springboot.version}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>repackage</goal>
-							</goals>
-							<configuration>
-								<outputDirectory>
-									${repackage.location}
-								</outputDirectory>
-							</configuration>
-						</execution>
-					</executions>
+					<!--<executions>-->
+						<!--<execution>-->
+							<!--<goals>-->
+								<!--<goal>repackage</goal>-->
+							<!--</goals>-->
+							<!--<configuration>-->
+								<!--<outputDirectory>-->
+									<!--${repackage.location}-->
+								<!--</outputDirectory>-->
+							<!--</configuration>-->
+						<!--</execution>-->
+					<!--</executions>-->
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -111,6 +141,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.1</version>
 			</plugin>
 		</plugins>
 	</build>
