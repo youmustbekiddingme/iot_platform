@@ -1,0 +1,18 @@
+主账号18320966643 ，用户组 clh 赋予权限OSS操作 ，子账号clh01从属于该用户组
+
+1.阿里云开通oss服务
+2.创建appkey
+clh01 子账号 ：
+  appkey ：   LTAI4Fzp4qXtBxskJUSdj2CX
+  appSecret:     jGSPIcYlvjAtb6LgjW9XfScfGeVdSO
+
+3.开发环境
+需要依赖这两个包
+需额外的包
+ <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+ </dependency>
+
+4.上传、下载、查询OSS 接口
