@@ -1,0 +1,5 @@
+注意全球化部署gateway 地址不同：
+GFUtils 文件的配置：gateway_region 不同
+North America: https://api.amazonalexa.com/v3/events
+Europe: https://api.eu.amazonalexa.com/v3/events
+Far East: https://api.fe.amazonalexa.com/v3/events
