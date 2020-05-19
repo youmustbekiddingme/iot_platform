@@ -83,6 +83,7 @@ function handleDiscovery(request, callback) {
         res.on('data',function(chun){
             var data = safelyParseJSON(chun);
             var endpoints=data.cameras;
+
             const response = {
                 event: {
                     header,
