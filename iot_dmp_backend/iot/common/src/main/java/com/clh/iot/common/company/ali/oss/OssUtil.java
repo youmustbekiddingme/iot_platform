@@ -5,6 +5,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
+import com.clh.iot.common.util.CloudStorage;
 
 import java.io.*;
 import java.util.List;
@@ -12,20 +13,23 @@ import java.util.List;
 /**
  * OSS云存储 常用接口
  */
-public class OssUtil {
+public class OssUtil extends CloudStorage {
     // Endpoint以杭州为例，其它Region请按实际情况填写。
     private static String endpoint="http://oss-cn-shenzhen.aliyuncs.com";
     // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
-    private static String accessKeyId = "LTAI4Fzp4qXtBxskJUSdj2CX";
-    private static String accessKeySecret = "jGSPIcYlvjAtb6LgjW9XfScfGeVdSO";
-    private static String bucketName = "clh-gf-test";
+    private static String accessKeyId = "";
+    private static String accessKeySecret = "";
+    private static String bucketName = "gf-clh";
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+
+    {
         //1.测试文件上传
         String sPath="D://A065473_2020-04-22_11-18-11_Motion Detection.mp4";
         String dPath="vedio/china/motion/200108_093054_100054_M.mp4";
-        OssUtil.upLoadFile(sPath,dPath);
+        OssUtil ossUtil = new OssUtil();
+        ossUtil.upLoadFile(sPath,dPath);
 
         //2.测试文件下载
 //        String objectName= "vedio/china/motion/200108_093054_100054_M.mp4";
@@ -46,7 +50,7 @@ public class OssUtil {
      * @param sPath  源文件地址
      * @param dPath  目标存储桶地址
      */
-    public static void upLoadFile(String sPath,String dPath){
+    public  void upLoadFile(String sPath,String dPath){
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         // 上传文件流。
