@@ -2,32 +2,42 @@ package com.clh.iot.common.company.ali.oss;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.model.GetObjectRequest;
-import com.aliyun.oss.model.OSSObjectSummary;
-import com.aliyun.oss.model.ObjectListing;
+import com.aliyun.oss.common.utils.DateUtil;
+import com.aliyun.oss.model.*;
 import com.clh.iot.common.util.CloudStorage;
+import org.apache.commons.lang3.builder.ToStringExclude;
+import org.junit.Test;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * OSS云存储 常用接口
+ * OSS 云存储和MNS消息服务结合使用
  */
 public class OssUtil extends CloudStorage {
     // Endpoint以杭州为例，其它Region请按实际情况填写。
-    private static String endpoint="http://oss-cn-shenzhen.aliyuncs.com";
+    public static String endpoint="http://oss-cn-shenzhen.aliyuncs.com";
     // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
-    private static String accessKeyId = "";
-    private static String accessKeySecret = "";
-    private static String bucketName = "gf-clh";
+    public static String accessKeyId = "LTAI4Fzp4qXtBxskJUSdj2CX";
+    public static String accessKeySecret = "";
+    public static String bucketName = "clh-gf-test";
 
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws  Exception
 
     {
+
+
         //1.测试文件上传
-        String sPath="D://A065473_2020-04-22_11-18-11_Motion Detection.mp4";
-        String dPath="vedio/china/motion/200108_093054_100054_M.mp4";
+//        String sPath="D://A065473_2020-04-22_11-18-11_Motion Detection.mp4";
+//        String dPath="vedio/china/motion/A065473_2020-04-22_11-18-11_Motion Detection.mp4";
+
+
+        String sPath="D://test111.txt";
+        String dPath="vedio/test111.txt";
         OssUtil ossUtil = new OssUtil();
         ossUtil.upLoadFile(sPath,dPath);
 
@@ -50,7 +60,16 @@ public class OssUtil extends CloudStorage {
      * @param sPath  源文件地址
      * @param dPath  目标存储桶地址
      */
-    public  void upLoadFile(String sPath,String dPath){
+    public  void upLoadFile(String sPath,String dPath) throws Exception{
+
+        Map<String, String> tags = new HashMap<String, String>();
+        tags.put("key0", "value0");
+
+
+// 在http header中设置标签信息。
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setObjectTagging(tags);
+
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         // 上传文件流。
@@ -60,7 +79,12 @@ public class OssUtil extends CloudStorage {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ossClient.putObject(bucketName, dPath, inputStream);
+
+        PutObjectResult putObjectResult =ossClient.putObject(bucketName, dPath, inputStream,metadata);
+        System.out.println(        putObjectResult.toString()
+        );
+
+
         // 关闭OSSClient。
         ossClient.shutdown();
     }
@@ -113,6 +137,35 @@ public class OssUtil extends CloudStorage {
 // 关闭OSSClient。
         ossClient.shutdown();
 
+    }
 
+    @Test
+    public  void generateRule()throws  Exception{
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        // 创建SetBucketLifecycleRequest。
+        SetBucketLifecycleRequest request = new SetBucketLifecycleRequest(bucketName);
+        String ruleId0 = "rule0";
+        String matchPrefix0 = "vedio/";  //桶名
+        Map<String, String> matchTags0 = new HashMap<String, String>();
+        matchTags0.put("key0", "value0");
+
+        LifecycleRule rule = new LifecycleRule(ruleId0, matchPrefix0, LifecycleRule.RuleStatus.Enabled, 1);
+        rule.setTags(matchTags0);
+        request.AddLifecycleRule(rule);
+        // 发起设置生命周期规则请求。
+        ossClient.setBucketLifecycle(request);
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+    }
+    @Test
+    public  void deleteLifeCircleRule(){
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+
+        ossClient.deleteBucketLifecycle(bucketName);
+
+// 关闭OSSClient。
+        ossClient.shutdown();
     }
 }
