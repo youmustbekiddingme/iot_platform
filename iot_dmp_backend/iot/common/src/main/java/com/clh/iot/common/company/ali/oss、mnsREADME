@@ -1,0 +1,107 @@
+主账号18320966643 ，用户组 clh 赋予权限OSS操作 ，子账号clh01从属于该用户组
+
+1.阿里云开通oss服务
+2.创建appkey
+clh01 子账号 ：
+  appkey ：   LTAI4Fzp4qXtBxskJUSdj2CX
+  appSecret:     jGSPIcYlvjAtb6LgjW9XfScfGeVdSO
+
+3.开发环境
+需要依赖这两个包
+需额外的包
+ <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+ </dependency>
+
+4.上传、下载、查询OSS 接口
+
+
+
+5.MNS 服务与OSS服务
+
+MNS 需要配置事件通知
+OSS 配置生命周期、过期规则将消息写入 MNS 主题，MNS订阅主题产生消息写入消息队列
+
+
+消息格式：
+ 1.新增消息
+ 只有1种情况：新增事件类型的消息
+ {
+     "events": [
+         {
+             "eventName": "ObjectCreated:PutObject",
+             "eventSource": "acs:oss",
+             "eventTime": "2020-05-27T08:47:43.000Z",
+             "eventVersion": "1.0",
+             "oss": {
+                 "bucket": {
+                     "arn": "acs:oss:cn-shenzhen:1389116950765829:clh-gf-test",
+                     "name": "clh-gf-test",
+                     "ownerIdentity": "1389116950765829",
+                     "virtualBucket": ""
+                 },
+                 "object": {
+                     "deltaSize": 46937676,
+                     "eTag": "1FA6AED2B7101EB36AE8417B184C2E87",
+                     "key": "wiwacam@hi-kam.net/200526_14.00.28_14.00.28_M.avx_1590501616_0_260_52429312",
+                     "size": 46937676
+                 },
+                 "ossSchemaVersion": "1.0",
+                 "ruleId": "test-rule"
+             },
+             "region": "cn-shenzhen",
+             "requestParameters": {
+                 "sourceIPAddress": "113.116.104.59"
+             },
+             "responseElements": {
+                 "requestId": "5ECE29249214783637CC3418"
+             },
+             "userIdentity": {
+                 "principalId": "260163588917575239"
+             }
+         }
+     ]
+ }
+ =========================================================================================================================================
+ 2.删除消息
+
+ 删除消息共三种情况：删除事件类型消息，错误上报的消息格式，消费完毕的消息
+{
+    "events": [
+        {
+            "eventName": "ObjectRemoved:DeleteObject",
+            "eventSource": "acs:oss",
+            "eventTime": "2020-05-28T02:09:34.000Z",
+            "eventVersion": "1.0",
+            "oss": {
+                "bucket": {
+                    "arn": "acs:oss:cn-shenzhen:1389116950765829:hfalarms",
+                    "name": "hfalarms",
+                    "ownerIdentity": "1389116950765829",
+                    "virtualBucket": ""
+                },
+                "object": {
+                    "deltaSize": -577026,
+                    "eTag": "4FE7B84FDAEE1CF02CBFEBA21072A31A",
+                    "key": "wiwacam@hi-kam.net/200526_14.00.28_14.00.28_M.avx_1590501616_0_260_52429334",
+                    "size": 577026
+                },
+                "ossSchemaVersion": "1.0",
+                "ruleId": "hfalarms-rule"
+            },
+            "region": "cn-shenzhen",
+            "requestParameters": {
+                "sourceIPAddress": "100.68.134.109"
+            },
+            "responseElements": {
+                "requestId": "5ECF1D5E46F60532363AF56B"
+            },
+            "userIdentity": {
+                "principalId": "1389116950765829"
+            }
+        }
+    ]
+}
+========================================================================================================================================================
