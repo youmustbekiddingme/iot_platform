@@ -1,7 +1,8 @@
-package com.clh.iot.common.company.ali.oss;
+package com.clh.iot.common.company.ali.mns;
 
 import com.aliyun.mns.client.CloudQueue;
 import com.aliyun.mns.model.Message;
+import com.clh.iot.common.company.ali.oss.OssUtil;
 import com.google.gson.Gson;
 
 import java.util.List;
