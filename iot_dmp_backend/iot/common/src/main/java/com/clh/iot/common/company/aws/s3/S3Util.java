@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.clh.iot.common.constP.S3Const;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +24,16 @@ public class S3Util {
         String fileObjKeyName = "vedio/xxx.txt";
         String fileName = "C:\\Users\\沈涛\\Desktop\\prod\\message.txt";
 
+
+
         try {
             //This code expects that you have AWS credentials set up per:
             // https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
-            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(clientRegion)
-                    .build();
+            AmazonS3 s3Client = S3Const.getAmazonS3();
+//            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+//                    .withRegion(clientRegion)
+//                    .build();
+
 
             // Upload a text string as a new object.
          //   s3Client.putObject(bucketName, stringObjKeyName, "Uploaded String Object");
