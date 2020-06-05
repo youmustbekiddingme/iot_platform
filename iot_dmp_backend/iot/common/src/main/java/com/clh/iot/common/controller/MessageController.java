@@ -64,7 +64,7 @@ public class MessageController {
         thread.start();;
         Map map = new HashMap();
         map.put("consume","secuess");
-        return map;//ff 24242
+        return map;//ff
     }
 
     /**
