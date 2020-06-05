@@ -20,7 +20,7 @@ public class ConsumerDemo {
             CloudQueue queue = client.getQueueRef("MyQueue");
             for (int i = 0; i < 10; i++)
             {
-                Message popMsg = queue.popMessage();
+                Message popMsg = queue.popMessage(10);
                 if (popMsg != null){
                     System.out.println("message handle: " + popMsg.getReceiptHandle());
                     // 默认会做 base64 解码

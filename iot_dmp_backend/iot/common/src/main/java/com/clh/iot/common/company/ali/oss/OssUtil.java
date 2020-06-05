@@ -1,13 +1,10 @@
 package com.clh.iot.common.company.ali.oss;
 
+import com.aliyun.mns.client.CloudAccount;
+import com.aliyun.mns.client.MNSClient;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.common.utils.DateUtil;
 import com.aliyun.oss.model.*;
-import com.clh.iot.common.util.CloudStorage;
-import org.apache.commons.lang3.builder.ToStringExclude;
-import org.junit.Test;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +14,24 @@ import java.util.Map;
  * OSS云存储 常用接口
  * OSS 云存储和MNS消息服务结合使用
  */
-public class OssUtil extends CloudStorage {
+public class OssUtil   {
     // Endpoint以杭州为例，其它Region请按实际情况填写。
     public static String endpoint="http://oss-cn-shenzhen.aliyuncs.com";
+    private static String mnsEndpoint="http://1389116950765829.mns.cn-shenzhen.aliyuncs.com/";
     // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
     public static String accessKeyId = "LTAI4Fzp4qXtBxskJUSdj2CX";
-    public static String accessKeySecret = "";
-    public static String bucketName = "clh-gf-test";
+    public static String accessKeySecret = "jGSPIcYlvjAtb6LgjW9XfScfGeVdSO";
+    public static String bucketName1 = "clh-gf-test";
+    public static String bucketName = "hfalarms";
+
+
+    private static CloudAccount account=null;
+    public static MNSClient client=null;
+    static{
+        account=new CloudAccount(accessKeyId,accessKeySecret,mnsEndpoint);
+        //this client need to be only initialize once
+        client=account.getMNSClient();
+    }
 
 
     public static void main(String[] args) throws  Exception
@@ -36,8 +44,8 @@ public class OssUtil extends CloudStorage {
 //        String dPath="vedio/china/motion/A065473_2020-04-22_11-18-11_Motion Detection.mp4";
 
 
-        String sPath="D://test111.txt";
-        String dPath="vedio/test111.txt";
+        String sPath="D://yyy.mp4";
+        String dPath="wiwacam@hi-kam.net/A045763/CloudStorageOned/200526_14.00.28_14.00.28_M.avx_1590501616_0_260_52429339";
         OssUtil ossUtil = new OssUtil();
         ossUtil.upLoadFile(sPath,dPath);
 
@@ -63,7 +71,7 @@ public class OssUtil extends CloudStorage {
     public  void upLoadFile(String sPath,String dPath) throws Exception{
 
         Map<String, String> tags = new HashMap<String, String>();
-        tags.put("key0", "value0");
+        tags.put("day1", "1");
 
 
 // 在http header中设置标签信息。
@@ -139,7 +147,6 @@ public class OssUtil extends CloudStorage {
 
     }
 
-    @Test
     public  void generateRule()throws  Exception{
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         // 创建SetBucketLifecycleRequest。
@@ -147,9 +154,13 @@ public class OssUtil extends CloudStorage {
         String ruleId0 = "rule0";
         String matchPrefix0 = "vedio/";  //桶名
         Map<String, String> matchTags0 = new HashMap<String, String>();
-        matchTags0.put("key0", "value0");
+        matchTags0.put("day7", "7");
 
-        LifecycleRule rule = new LifecycleRule(ruleId0, matchPrefix0, LifecycleRule.RuleStatus.Enabled, 1);
+        LifecycleRule rule = new LifecycleRule(ruleId0, matchPrefix0, LifecycleRule.RuleStatus.Enabled, 7);
+
+
+
+
         rule.setTags(matchTags0);
         request.AddLifecycleRule(rule);
         // 发起设置生命周期规则请求。
@@ -158,7 +169,6 @@ public class OssUtil extends CloudStorage {
         // 关闭OSSClient。
         ossClient.shutdown();
     }
-    @Test
     public  void deleteLifeCircleRule(){
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
