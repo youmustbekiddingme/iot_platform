@@ -19,7 +19,7 @@ public class SQSMultiThreadTest   {
 
 public void start(){
     ConsumerTask consumerTask = new ConsumerTask();
-    ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
+    ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
     for (int i = 0; i < SQSConst.THREAD_NUMS; i++) {
         fixedThreadPool.execute(consumerTask);
     }
@@ -38,7 +38,7 @@ public void start(){
                 CreateQueueRequest createQueueRequest =
                         new CreateQueueRequest("MyQueue");
                 String myQueueUrl = sqs.createQueue(createQueueRequest).getQueueUrl();
-
+                System.out.println(myQueueUrl);
                 ReceiveMessageRequest request = new ReceiveMessageRequest().withQueueUrl(myQueueUrl).withMaxNumberOfMessages(10).withWaitTimeSeconds(SQSConst.LONG_POLLING_PERIOD);
                 System.out.println(SQSConst.LONG_POLLING_PERIOD);
                 List<Message> messageList=  sqs.receiveMessage(request).getMessages();
