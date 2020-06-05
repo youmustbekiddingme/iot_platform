@@ -16,7 +16,11 @@ import java.util.Map;
 @RequestMapping("/message")
 public class MessageController {
 
-    @RequestMapping("/produce")
+    /**
+     * 产生消息
+     * @return
+     */
+    @RequestMapping("/aws/p")
     public Object produceMessage(){
 
 
@@ -44,7 +48,11 @@ public class MessageController {
         return map;
     }
 
-    @RequestMapping("/consume")
+    /**
+     * 消费消息
+     * @return
+     */
+    @RequestMapping("/aws/c")
     public Object messageConsume(){
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -58,7 +66,13 @@ public class MessageController {
         map.put("consume","secuess");
         return map;
     }
-    @RequestMapping("/setTime")
+
+    /**
+     * 设置消息队列轮询时间
+     * @param time
+     * @return
+     */
+    @RequestMapping("/aws/setTime")
     public Object setLongPollingTime(int time){
         SQSConst.LONG_POLLING_PERIOD=time;
         System.out.println(SQSConst.LONG_POLLING_PERIOD);
