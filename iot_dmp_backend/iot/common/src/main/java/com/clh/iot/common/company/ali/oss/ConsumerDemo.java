@@ -15,7 +15,7 @@ public class ConsumerDemo {
 
         //this client need only initialize once
         MNSClient client = account.getMNSClient();
-
+        //
         //循环消费10条消息
         try{
             CloudQueue queue = client.getQueueRef("MyQueue");
