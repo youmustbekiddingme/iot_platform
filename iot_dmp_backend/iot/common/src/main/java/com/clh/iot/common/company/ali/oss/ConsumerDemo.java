@@ -10,7 +10,8 @@ import com.aliyun.mns.model.Message;
 public class ConsumerDemo {
 
     public static void main(String[] args) {
-        CloudAccount account = new CloudAccount("LTAI4Fzp4qXtBxskJUSdj2CX", "jGSPIcYlvjAtb6LgjW9XfScfGeVdSO", "http://1389116950765829.mns.cn-shenzhen.aliyuncs.com/");
+      //  CloudAccount account = new CloudAccount("LTAI4Fzp4qXtBxskJUSdj2CX", "jGSPIcYlvjAtb6LgjW9XfScfGeVdSO", "http://1389116950765829.mns.cn-shenzhen.aliyuncs.com/");
+        CloudAccount account = new CloudAccount("", "", "");
 
         //this client need only initialize once
         MNSClient client = account.getMNSClient();

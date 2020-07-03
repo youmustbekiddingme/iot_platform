@@ -19,9 +19,10 @@ public class OssUtil   {
     public static String endpoint="http://oss-cn-shenzhen.aliyuncs.com";
     private static String mnsEndpoint="http://1389116950765829.mns.cn-shenzhen.aliyuncs.com/";
     // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
-    public static String accessKeyId = "LTAI4Fzp4qXtBxskJUSdj2CX";
-    public static String accessKeySecret = "jGSPIcYlvjAtb6LgjW9XfScfGeVdSO";
-    public static String bucketName1 = "clh-gf-test";
+    public static String accessKeyId = "";
+    public static String accessKeySecret = "";
+//    public static String accessKeyId = "LTAI4Fzp4qXtBxskJUSdj2CX";
+//    public static String accessKeySecret = "jGSPIcYlvjAtb6LgjW9XfScfGeVdSO";
     public static String bucketName = "hfalarms";
 
 
@@ -38,16 +39,13 @@ public class OssUtil   {
 
     {
 
-
+        upLoadFileBatch();
         //1.测试文件上传
 //        String sPath="D://A065473_2020-04-22_11-18-11_Motion Detection.mp4";
 //        String dPath="vedio/china/motion/A065473_2020-04-22_11-18-11_Motion Detection.mp4";
 
 
-        String sPath="D://yyy.mp4";
-        String dPath="wiwacam@hi-kam.net/A045763/CloudStorageOned/200526_14.00.28_14.00.28_M.avx_1590501616_0_260_52429339";
-        OssUtil ossUtil = new OssUtil();
-        ossUtil.upLoadFile(sPath,dPath);
+
 
         //2.测试文件下载
 //        String objectName= "vedio/china/motion/200108_093054_100054_M.mp4";
@@ -63,15 +61,13 @@ public class OssUtil   {
 
     }
 
-    /**
-     * 文件上传
-     * @param sPath  源文件地址
-     * @param dPath  目标存储桶地址
-     */
-    public  void upLoadFile(String sPath,String dPath) throws Exception{
+
+    public static void upLoadFileBatch() throws Exception{
+        String sPath="C:\\Users\\沈涛\\Desktop\\prod\\test.txt";
+
 
         Map<String, String> tags = new HashMap<String, String>();
-        tags.put("day1", "1");
+        tags.put("day7", "7");
 
 
 // 在http header中设置标签信息。
@@ -80,17 +76,22 @@ public class OssUtil   {
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-        // 上传文件流。
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(sPath);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+        for(int i=0;i<1;i++){
+            String dPath="wiwacam@hi-kam.net/A045763/200526_14.00.28_14.00.28_M.avx_1590501616_0_260_";
+            // 上传文件流。
+            InputStream inputStream = null;
+            try {
+                inputStream = new FileInputStream(sPath);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            dPath=dPath+i;
+            PutObjectResult putObjectResult =ossClient.putObject(bucketName, dPath, inputStream,metadata);
         }
 
-        PutObjectResult putObjectResult =ossClient.putObject(bucketName, dPath, inputStream,metadata);
-        System.out.println(        putObjectResult.toString()
-        );
+
+     //   System.out.println( putObjectResult.toString());
 
 
         // 关闭OSSClient。
